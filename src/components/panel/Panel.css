@@ -1,0 +1,28 @@
+.Panel {
+  width: 25em;
+  height: 100vh;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 5;
+  background-color: #fff;
+  overflow-y: auto; }
+  .Panel .top {
+    display: flex; }
+    .Panel .top .logo {
+      width: 5em;
+      padding: .25em; }
+    .Panel .top .title {
+      flex: 1; }
+  .Panel .info {
+    padding: .5em; }
+    .Panel .info .item {
+      position: relative;
+      padding: 1.5em .25em .25em .25em;
+      background-color: #9fd5b3;
+      margin-bottom: 1.5em; }
+      .Panel .info .item span {
+        background-color: #f5c02f;
+        padding: .25em;
+        position: absolute;
+        top: -.5em; }
