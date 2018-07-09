@@ -20,13 +20,32 @@
   }
  }
 
+ .sign-up{
+  padding: 1.5em .5em .5em .5em;
+  border: .1em solid #9fd5b3;
+  margin: 1.5em 0;
+  position: relative;
+
+  .phone-valid-alert{
+    background-color: lighten($color: #9fd5b3, $amount: 10);
+    padding: .1em;
+  }
+
+  span{
+    background-color: #f5c02f;
+    padding: .25em;
+    position: absolute;
+    top: -.5em;
+   }
+ }
+
  .info{
   padding: .5em;
  
   .item{
     position: relative;
-    padding: 1.5em .25em .25em .25em;
-    background-color: #9fd5b3;
+    padding: 1.5em .5em .5em .5em;
+    border: .1em solid #9fd5b3;
     margin-bottom: 1.5em;
 
     span{

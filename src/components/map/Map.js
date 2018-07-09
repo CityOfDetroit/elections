@@ -39,7 +39,7 @@ class Map extends Component {
       this.map.addSource('single-point', {
         "type": "geojson",
         "data": {
-            "type": "FeatureCollection",
+            "typdata.features[i].propertiese": "FeatureCollection",
             "features": []
         }
     });
@@ -50,7 +50,7 @@ class Map extends Component {
           "type": "circle",
           "paint": {
               "circle-radius": 10,
-              "circle-color": "#007cbf"
+              "circle-color": "red"
           }
       });
     });
@@ -72,15 +72,22 @@ class Map extends Component {
           break;
         }
       }
-      let polygon = turf.polygon(data.features[pollingPlaceId].geometry.coordinates);
-      let centroid = turf.centroid(polygon);
-      map.getSource('single-point').setData(centroid.geometry);
+
+      let tempStr = data.features[pollingPlaceId].properties.pollxy.split(',');
+      let point = [];
+      tempStr.forEach(element => {
+        point.push(parseFloat(element));
+      });
+      point = turf.point(point);
+      
+      map.getSource('single-point').setData(point.geometry);
       map.flyTo({
-        center: centroid.geometry.coordinates,
+        center: data.features[pollingPlaceId].properties.pollxy.split(','),
         zoom: 14
       });
       document.querySelector('.info').innerHTML = `
       <div class="sign-up">
+        <span>SIGN UP</span>
         <label for="phone-number">Phone:
           <input type="text" name="phone-number" id="phone-number" placeholder="(313)333-3333" onkeyup="phoneFormater(this)"/>
         </label>

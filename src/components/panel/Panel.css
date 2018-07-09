@@ -14,12 +14,25 @@
       padding: .25em; }
     .Panel .top .title {
       flex: 1; }
+  .Panel .sign-up {
+    padding: 1.5em .5em .5em .5em;
+    border: .1em solid #9fd5b3;
+    margin: 1.5em 0;
+    position: relative; }
+    .Panel .sign-up .phone-valid-alert {
+      background-color: #c2e5cf;
+      padding: .1em; }
+    .Panel .sign-up span {
+      background-color: #f5c02f;
+      padding: .25em;
+      position: absolute;
+      top: -.5em; }
   .Panel .info {
     padding: .5em; }
     .Panel .info .item {
       position: relative;
-      padding: 1.5em .25em .25em .25em;
-      background-color: #9fd5b3;
+      padding: 1.5em .5em .5em .5em;
+      border: .1em solid #9fd5b3;
       margin-bottom: 1.5em; }
       .Panel .info .item span {
         background-color: #f5c02f;
