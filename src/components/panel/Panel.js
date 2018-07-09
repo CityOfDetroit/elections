@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import './Panel.css';
 import logo from './logo.svg';
-const MapboxGeocoder = require('@mapbox/mapbox-gl-geocoder');
 
 class Panel extends Component {
   render() {
