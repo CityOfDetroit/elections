@@ -9,13 +9,15 @@
 .header {
   height: 3em;
   grid-area: header;
-  background: green;
+  background: #004445;
   display: flex; }
   .header img {
     width: 3em; }
   .header div {
     display: flex;
-    flex: 1; }
+    flex: 1;
+    color: #fff;
+    font-weight: bold; }
     .header div span {
       margin: auto; }
 
@@ -50,6 +52,18 @@
 .item {
   height: 7em;
   padding: .75em;
-  background: yellow; }
+  background: #feb70d; }
   .item div {
     margin: auto; }
+  .item input {
+    max-width: 100%;
+    border: none;
+    padding: .5em; }
+  .item button {
+    padding: 1em 2em;
+    border: none;
+    background: #004445;
+    color: #fff; }
+
+.item.active {
+  border: 0.2em solid rgba(255, 255, 255, 0.5); }

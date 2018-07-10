@@ -11,6 +11,8 @@ class Map extends Component {
     super(props);
     this.map = null;
     this.geocoder = null;
+    this.lat = null;
+    this.lng = null;
   }
   componentDidMount() {
     mapboxgl.accessToken =
@@ -30,7 +32,7 @@ class Map extends Component {
     });
 
     this.geocoder.on('result', (e) => {
-      this.getUserResults(e, this.map)
+      this.getUserResults(e, this.map, this)
     });
 
     document.getElementById('geocoder').appendChild(this.geocoder.onAdd(this.map));
@@ -73,16 +75,76 @@ class Map extends Component {
       });
     });
   }
-  
-  getUserResults(ev, map){
+
+  stripPhoneNumber(number){
+    let newNumber = '';
+    console.log(number.split('('));
+    newNumber = number.split('(')[1];
+    console.log(newNumber);
+    console.log(newNumber.split(')'));
+    newNumber = newNumber.split(')')[0] + newNumber.split(')')[1];
+    console.log(newNumber);
+    console.log(newNumber.split('-'));
+    newNumber = newNumber.split('-')[0] + newNumber.split('-')[1];
+    console.log(newNumber);
+    return newNumber;
+  }
+
+  checkIfPhoneValid(){
+    let phoneNumber = document.getElementById('phone').value;
+    let a = /^(1\s|1|)?((\(\d{3}\))|\d{3})(\-|\s)?(\d{3})(\-|\s)?(\d{4})$/.test(phoneNumber);
+    phoneNumber = this.stripPhoneNumber(phoneNumber);
+    console.log(document.querySelector('#geocoder input').value);
+    if(a){
+      let routeIDs = '1';
+      let servicesSignup = 'trash';
+      if(routeIDs !== ''){
+        let data = {
+          'phone_number'  : phoneNumber,
+          'waste_area_ids': routeIDs,
+          'service_type'  : servicesSignup,
+          'address' : document.querySelector('#geocoder input').value,
+          'latitude' :  this.lat,
+          'longitude' : this.lng
+        };
+        console.log(data);
+        const url = 'https://apis.detroitmi.gov/waste_notifier/subscribe/';
+        // Create our request constructor with all the parameters we need
+        let request = new Request(url, {
+            method: 'POST',
+            body: JSON.stringify(data),
+            headers: new Headers({
+              'Content-type': 'application/json'
+            }),
+            mode: 'cors',
+            cache: 'default'
+        });
+        fetch(request)
+          .then((resp) => {
+            // console.log(resp);
+            // console.log(resp.status);
+          if(resp.status === 201){
+              console.log('item submitted');
+              // document.querySelector('.phone-valid-alert').className = 'phone-valid-alert active';
+            }
+        });
+      }else{
+        // document.querySelector('.invalid-phone-error-message').innerHTML = 'Plese select one or more services to recive reminders.';
+        // document.querySelector('.phone-invalid-alert').className = 'phone-invalid-alert active';
+      }
+    }else{
+      // document.querySelector('.invalid-phone-error-message').innerHTML = 'Invalid number. Please enter re-enter you number.';
+      // document.querySelector('.phone-invalid-alert').className = 'phone-invalid-alert active';
+    }
+  }
+
+  getUserResults(ev, map, parent){
     console.log(ev);
     console.log(map);
+    parent.lat = ev.result.center[0];
+    parent.lng = ev.result.center[1];
     
     map.getSource('single-point').setData(ev.result.geometry);
-    map.flyTo({
-      center: ev.result.geometry.coordinates,
-      zoom: 12
-    });
     let url = `https://services2.arcgis.com/qvkbeam7Wirps6zC/arcgis/rest/services/Election_Boundaries_2018/FeatureServer/0//query?where=&objectIds=&time=&geometry=${ev.result.center[0]}%2C${ev.result.center[1]}+&geometryType=esriGeometryPoint&inSR=4326&spatialRel=esriSpatialRelWithin&resultType=none&distance=0.0&units=esriSRUnit_Meter&returnGeodetic=false&outFields=*&returnGeometry=true&returnCentroid=false&multipatchOption=xyFootprint&maxAllowableOffset=&geometryPrecision=&outSR=4326&datumTransformation=&applyVCSProjection=false&returnIdsOnly=false&returnUniqueIdsOnly=false&returnCountOnly=false&returnExtentOnly=false&returnDistinctValues=false&orderByFields=&groupByFieldsForStatistics=&outStatistics=&having=&resultOffset=&resultRecordCount=&returnZ=false&returnM=false&returnExceededLimitFeatures=true&quantizationParameters=&sqlFormat=none&f=geojson&token=`;
     fetch(url)
     .then((resp) => resp.json()) // Transform the data into json
@@ -102,6 +164,7 @@ class Map extends Component {
               <em>${data.features[i].properties.district_l}</em>
             </div>
             `;
+            document.querySelector('.wccc').className = 'wccc item active';
             break;
           case 'Congressional':
             document.querySelector('.congress').innerHTML = `
@@ -111,6 +174,7 @@ class Map extends Component {
               <em>${data.features[i].properties.district_l}</em>
             </div>
             `;
+            document.querySelector('.congress').className = 'congress item active';
             break;
 
           case 'State Senate':
@@ -121,6 +185,7 @@ class Map extends Component {
               <em>${data.features[i].properties.district_l}</em>
             </div>
             `;
+            document.querySelector('.state-senate').className = 'state-senate item active';
             break;
 
           case 'City Council':
@@ -131,6 +196,7 @@ class Map extends Component {
               <em>${data.features[i].properties.district_l}</em>
             </div>
             `;
+            document.querySelector('.council').className = 'council item active';
             break;
 
           case 'Police Commissioner':
@@ -141,6 +207,7 @@ class Map extends Component {
               <em>${data.features[i].properties.district_l}</em>
             </div>
             `;
+            document.querySelector('.police').className = 'police item active';
             break;
 
           case 'Wayne County Commissioner':
@@ -151,6 +218,7 @@ class Map extends Component {
               <em>${data.features[i].properties.district_l}</em>
             </div>
             `;
+            document.querySelector('.wcc').className = 'wcc item active';
             break;
 
           case 'Election Precincts':
@@ -162,6 +230,7 @@ class Map extends Component {
               <em>${data.features[i].properties.precinct_l}</em>
             </div>
             `;
+            document.querySelector('.poll').className = 'poll item active';
             break;
           default:
 
@@ -170,14 +239,22 @@ class Map extends Component {
       }
       document.querySelector('.sign-up').innerHTML = `
       <div>
-      <strong>STAY INFORM</strong><br/>
+      <strong>STAY INFORMED</strong><br/>
       <label for="phone">
         Phones
-        <input id="phone" value="" placeholder="(313)333-3333"/>
+        <input id="phone" value="" placeholder="(313)333-3333" />
       </label>
+      <div class="phone-valid-alert">Check your phone for a confirmation message. <span class="close-phone-validation-alert">&times;</span></div>
+      <div class="phone-invalid-alert"><span class="invalid-phone-error-message"></span> <span class="close-phone-validation-alert">&times;</span></div>      
       <button>Sign Up</button>
       </div>
       `;
+      document.querySelector('.sign-up button').addEventListener('click', (ev)=>{
+        console.log(parent);
+        console.log(ev);
+        parent.checkIfPhoneValid();
+      });
+      document.querySelector('.sign-up').className = 'sign-up item active';
       let tempStr = data.features[pollingPlaceId].properties.pollxy.split(',');
       let point = [];
       tempStr.forEach(element => {
@@ -187,6 +264,12 @@ class Map extends Component {
       point = turf.point(point);
   
       map.getSource('poll-place').setData(point.geometry);
+      let pointSet = turf.featureCollection([point, ev.result]);
+      let center = turf.center(pointSet);
+      map.flyTo({
+        center: center.geometry.coordinates,
+        zoom: 12
+      });
     });
   }
 

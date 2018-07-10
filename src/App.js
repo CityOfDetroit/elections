@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import './App.css';
-import Item from './components/item/Item.js';
 import Map from './components/map/Map.js';
 import logo from './logo.png';
 
