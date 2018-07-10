@@ -16,7 +16,7 @@
           box-sizing:border-box;
   }
 .mapboxgl-ctrl-geocoder {
-  font:15px/20px 'Helvetica Neue', Arial, Helvetica, sans-serif;
+  font-family: 'Montserrat', sans-serif;
   position:relative;
   background-color:white;
   min-width:240px;
@@ -25,9 +25,10 @@
   }
 
 .mapboxgl-ctrl-geocoder input[type='text'] {
+  border: none;
+  background: #9fd5b3;
   font-size:12px;
   width:100%;
-  background-color:transparent;
   height:40px;
   margin:0;
   padding:10px 10px 10px 40px;
@@ -65,7 +66,6 @@
 
 .mapboxgl-ctrl-geocoder,
 .mapboxgl-ctrl-geocoder ul {
-  box-shadow: 0 0 0 2px rgba(0,0,0,0.1);
   }
 
 /* Suggestions */
@@ -97,7 +97,6 @@
     overflow:hidden;
     text-overflow:ellipsis;
     white-space:nowrap;
-    border-bottom:1px solid rgba(0,0,0,0.1);
     color:#404040;
     }
     .mapboxgl-ctrl-geocoder ul > li:last-child > a { border-bottom:none; }

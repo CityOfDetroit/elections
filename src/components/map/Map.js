@@ -93,12 +93,12 @@ class Map extends Component {
   checkIfPhoneValid(){
     let phoneNumber = document.getElementById('phone').value;
     let a = /^(1\s|1|)?((\(\d{3}\))|\d{3})(\-|\s)?(\d{3})(\-|\s)?(\d{4})$/.test(phoneNumber);
-    phoneNumber = this.stripPhoneNumber(phoneNumber);
+    
     console.log(document.querySelector('#geocoder input').value);
     if(a){
+      phoneNumber = this.stripPhoneNumber(phoneNumber);
       let routeIDs = '1';
       let servicesSignup = 'trash';
-      if(routeIDs !== ''){
         let data = {
           'phone_number'  : phoneNumber,
           'waste_area_ids': routeIDs,
@@ -124,17 +124,16 @@ class Map extends Component {
             // console.log(resp);
             // console.log(resp.status);
           if(resp.status === 201){
-              console.log('item submitted');
-              // document.querySelector('.phone-valid-alert').className = 'phone-valid-alert active';
-            }
+            console.log('item submitted');
+            document.querySelector('.phone-valid-alert').className = 'phone-valid-alert active';
+          }else{
+            document.querySelector('.invalid-phone-error-message').innerHTML = 'Error sending: Please try again.';
+            document.querySelector('.phone-invalid-alert').className = 'phone-invalid-alert active';
+          }
         });
-      }else{
-        // document.querySelector('.invalid-phone-error-message').innerHTML = 'Plese select one or more services to recive reminders.';
-        // document.querySelector('.phone-invalid-alert').className = 'phone-invalid-alert active';
-      }
     }else{
-      // document.querySelector('.invalid-phone-error-message').innerHTML = 'Invalid number. Please enter re-enter you number.';
-      // document.querySelector('.phone-invalid-alert').className = 'phone-invalid-alert active';
+      document.querySelector('.invalid-phone-error-message').innerHTML = 'Invalid number. Please enter re-enter you number.';
+      document.querySelector('.phone-invalid-alert').className = 'phone-invalid-alert active';
     }
   }
 
@@ -143,7 +142,11 @@ class Map extends Component {
     console.log(map);
     parent.lat = ev.result.center[0];
     parent.lng = ev.result.center[1];
-    
+    let items = document.querySelectorAll('.item');
+    items.forEach((item)=>{
+      item.innerHTML = '';
+      item.className = `${item.className.split(' ')[0]} ${item.className.split(' ')[1]}`;
+    });
     map.getSource('single-point').setData(ev.result.geometry);
     let url = `https://services2.arcgis.com/qvkbeam7Wirps6zC/arcgis/rest/services/Election_Boundaries_2018/FeatureServer/0//query?where=&objectIds=&time=&geometry=${ev.result.center[0]}%2C${ev.result.center[1]}+&geometryType=esriGeometryPoint&inSR=4326&spatialRel=esriSpatialRelWithin&resultType=none&distance=0.0&units=esriSRUnit_Meter&returnGeodetic=false&outFields=*&returnGeometry=true&returnCentroid=false&multipatchOption=xyFootprint&maxAllowableOffset=&geometryPrecision=&outSR=4326&datumTransformation=&applyVCSProjection=false&returnIdsOnly=false&returnUniqueIdsOnly=false&returnCountOnly=false&returnExtentOnly=false&returnDistinctValues=false&orderByFields=&groupByFieldsForStatistics=&outStatistics=&having=&resultOffset=&resultRecordCount=&returnZ=false&returnM=false&returnExceededLimitFeatures=true&quantizationParameters=&sqlFormat=none&f=geojson&token=`;
     fetch(url)
@@ -238,10 +241,10 @@ class Map extends Component {
         }
       }
       document.querySelector('.sign-up').innerHTML = `
-      <div>
+      <div class="box">
       <strong>STAY INFORMED</strong><br/>
       <label for="phone">
-        Phones
+        Phone
         <input id="phone" value="" placeholder="(313)333-3333" />
       </label>
       <div class="phone-valid-alert">Check your phone for a confirmation message. <span class="close-phone-validation-alert">&times;</span></div>
@@ -249,11 +252,21 @@ class Map extends Component {
       <button>Sign Up</button>
       </div>
       `;
+      document.querySelector('#phone').addEventListener('keyup', (ev)=>{
+        parent.phoneFormater(ev);
+      })
       document.querySelector('.sign-up button').addEventListener('click', (ev)=>{
-        console.log(parent);
-        console.log(ev);
         parent.checkIfPhoneValid();
       });
+      document.querySelector('.sign-up button').addEventListener('click', (ev)=>{
+        parent.closePhoneValidationAlert(ev);
+      });
+      let phoneValidationAlert = document.querySelectorAll('.close-phone-validation-alert');
+      for (var i = 0; i < phoneValidationAlert.length; i++) {
+        phoneValidationAlert[i].addEventListener('click', function(b){
+          parent.closePhoneValidationAlert(b);
+        });
+      }
       document.querySelector('.sign-up').className = 'sign-up item active';
       let tempStr = data.features[pollingPlaceId].properties.pollxy.split(',');
       let point = [];
@@ -271,6 +284,20 @@ class Map extends Component {
         zoom: 12
       });
     });
+  }
+
+  phoneFormater(obj){
+    console.log(obj);
+    var numbers = obj.target.value.replace(/\D/g, ''),
+    char = {0:'(',3:')',6:'-'};
+    obj.target.value = '';
+    for (var i = 0; i < numbers.length; i++) {
+        obj.target.value += (char[i]||'') + numbers[i];
+    }
+  }
+
+  closePhoneValidationAlert(alertBox){
+    alertBox.target.parentNode.className = alertBox.target.parentNode.className.split(' ')[0];
   }
 
   render() {

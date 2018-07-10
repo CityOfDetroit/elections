@@ -4,7 +4,8 @@
   overflow-x: hidden;
   overflow-y: auto;
   display: grid;
-  grid-template-areas: "header header" "search search" "map map" "sign-up poll" "council wccc" "wcc police" "state-senate congress"; }
+  grid-template-columns: 50%;
+  grid-template-areas: "header header" "search search" "map map" "sign-up poll" "state-senate congress" "wccc council" "wcc police"; }
 
 .header {
   height: 3em;
@@ -26,7 +27,7 @@
 
 .Map {
   grid-area: map;
-  height: 35vh; }
+  height: 40vh; }
 
 .poll {
   grid-area: poll; }
@@ -50,7 +51,8 @@
   grid-area: congress; }
 
 .item {
-  height: 7em;
+  min-height: 10em;
+  font-size: .85em;
   padding: .75em;
   background: #feb70d; }
   .item div {
@@ -65,5 +67,55 @@
     background: #004445;
     color: #fff; }
 
+.sign-up .box {
+  position: relative; }
+  .sign-up .box .phone-valid-alert, .sign-up .box .phone-invalid-alert {
+    display: none;
+    position: absolute;
+    top: 0;
+    padding: 1em 1.25em 1em .5em; }
+  .sign-up .box .phone-valid-alert.active {
+    display: block;
+    background: #9fd5b3; }
+  .sign-up .box .phone-invalid-alert.active {
+    display: block;
+    background: #fd9a93; }
+  .sign-up .box .close-phone-validation-alert {
+    position: absolute;
+    top: -.25em;
+    right: -.25em;
+    background: #fff;
+    color: #f44e42;
+    font-size: 1.5em;
+    font-weight: bold;
+    padding: .05em .4em; }
+
 .item.active {
   border: 0.2em solid rgba(255, 255, 255, 0.5); }
+
+@media all and (min-width: 750px) {
+  .Map {
+    height: 45vh; }
+  .item {
+    min-height: 7em; } }
+
+@media all and (min-width: 950px) {
+  .header {
+    height: 5em; }
+    .header img {
+      width: 5em; }
+    .header span {
+      font-size: 2em; }
+  .Map {
+    height: 47vh; }
+  .item {
+    min-height: 7em; }
+  .App {
+    grid-template-columns: 33.33334%;
+    grid-template-areas: "header header header" "search search search" "map map map" "sign-up sign-up poll" "congress state-senate council" "wccc wcc police"; }
+  .sign-up {
+    display: flex; }
+    .sign-up .box {
+      margin: auto; }
+    .sign-up input {
+      padding: 1em; } }
