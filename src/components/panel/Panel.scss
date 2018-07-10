@@ -1,59 +1,10 @@
 .Panel{
- width: 25em;
- height: 100vh;
- position: absolute;
- top: 0;
- left: 0;
- z-index: 5;
- background-color: #fff; 
- overflow-y: auto;
-
- .top{
-  display: flex;
-
-  .logo{
-    width: 5em;
-    padding: .25em;
-   } 
-  .title{
-    flex: 1;
-  }
- }
-
- .sign-up{
-  padding: 1.5em .5em .5em .5em;
-  border: .1em solid #9fd5b3;
-  margin: 1.5em 0;
-  position: relative;
-
-  .phone-valid-alert{
-    background-color: lighten($color: #9fd5b3, $amount: 10);
-    padding: .1em;
-  }
-
-  span{
-    background-color: #f5c02f;
-    padding: .25em;
-    position: absolute;
-    top: -.5em;
-   }
- }
-
- .info{
-  padding: .5em;
- 
-  .item{
-    position: relative;
-    padding: 1.5em .5em .5em .5em;
-    border: .1em solid #9fd5b3;
-    margin-bottom: 1.5em;
-
-    span{
-     background-color: #f5c02f;
-     padding: .25em;
-     position: absolute;
-     top: -.5em;
-    }
-  }
- }
+  display: grid;
+  grid-template-areas: 
+  "header header header"
+  "search search search"
+  "map map item-a"
+  "map map item-b"
+  "item-c sign-up item-d"
+  "item-e item-f item-g"
 }

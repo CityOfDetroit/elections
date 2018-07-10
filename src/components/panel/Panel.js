@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import './Panel.css';
-import logo from './logo.svg';
+import logo from './logo.png';
 
 class Panel extends Component {
   render() {

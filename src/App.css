@@ -1,4 +1,55 @@
 .App {
   width: 100vw;
   height: 100vh;
-  position: relative; }
+  overflow-x: hidden;
+  overflow-y: auto;
+  display: grid;
+  grid-template-areas: "header header" "search search" "map map" "sign-up poll" "council wccc" "wcc police" "state-senate congress"; }
+
+.header {
+  height: 3em;
+  grid-area: header;
+  background: green;
+  display: flex; }
+  .header img {
+    width: 3em; }
+  .header div {
+    display: flex;
+    flex: 1; }
+    .header div span {
+      margin: auto; }
+
+#geocoder {
+  grid-area: search; }
+
+.Map {
+  grid-area: map;
+  height: 35vh; }
+
+.poll {
+  grid-area: poll; }
+
+.sign-up {
+  grid-area: sign-up; }
+
+.police {
+  grid-area: police; }
+
+.wccc {
+  grid-area: wccc; }
+
+.wcc {
+  grid-area: wcc; }
+
+.state-senate {
+  grid-area: state-senate; }
+
+.congress {
+  grid-area: congress; }
+
+.item {
+  height: 7em;
+  padding: .75em;
+  background: yellow; }
+  .item div {
+    margin: auto; }
