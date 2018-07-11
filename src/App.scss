@@ -1,7 +1,7 @@
 .App{
     width: 100vw;
     height: 100vh;
-    background: lighten($color: #feb70d, $amount: 10);
+    background: lighten($color: #9fd5b3, $amount: 10);
     overflow-x: hidden;
     overflow-y: auto;
     display: grid;
@@ -39,6 +39,7 @@
 }
 
 #geocoder{
+    border: .1em solid #cecece;
     grid-area: search;
 }
 
@@ -91,8 +92,8 @@
     button{
         padding: 1em 2em;
         border: none;
-        background: #004445;
-        color: #fff;
+        background: #feb70d;
+        font-weight: bold;
         cursor: pointer;
     }
 }

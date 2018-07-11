@@ -22,7 +22,7 @@
 
 .mapboxgl-ctrl-geocoder input[type='text'] {
   border: none;
-  background: #c7e1d0;
+  background: #fff;
   font-size: 1.25em;
   width: 100%;
   height: 40px;

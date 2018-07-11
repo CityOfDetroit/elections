@@ -1,7 +1,7 @@
 .App {
   width: 100vw;
   height: 100vh;
-  background: #fec640;
+  background: #c2e5cf;
   overflow-x: hidden;
   overflow-y: auto;
   display: grid;
@@ -25,6 +25,7 @@
       margin: auto; }
 
 #geocoder {
+  border: .1em solid #cecece;
   grid-area: search; }
 
 .Map {
@@ -63,8 +64,8 @@
   .item button {
     padding: 1em 2em;
     border: none;
-    background: #004445;
-    color: #fff;
+    background: #feb70d;
+    font-weight: bold;
     cursor: pointer; }
 
 .sign-up .box {

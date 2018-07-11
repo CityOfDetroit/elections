@@ -279,14 +279,14 @@ class Map extends Component {
       }
       document.querySelector('.sign-up').innerHTML = `
       <div class="box">
-      <strong>STAY INFORMED</strong><br/>
+      <strong>GET TEXT REMINDERS</strong><br/>
       <label for="phone">
         Phone
         <input id="phone" value="" placeholder="(313)333-3333" />
       </label>
       <div class="phone-valid-alert">Check your phone for a confirmation message. <span class="close-phone-validation-alert">&times;</span></div>
       <div class="phone-invalid-alert"><span class="invalid-phone-error-message"></span> <span class="close-phone-validation-alert">&times;</span></div>      
-      <button>Sign Up</button>
+      <button>SIGN UP</button>
       </div>
       `;
       document.querySelector('#phone').addEventListener('keyup', (ev)=>{
