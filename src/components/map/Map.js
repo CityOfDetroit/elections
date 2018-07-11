@@ -16,6 +16,22 @@ class Map extends Component {
     this.lat = null;
     this.lng = null;
   }
+
+  geocoderAnimation(){
+    console.log('start animation');
+    setTimeout(()=>{ document.querySelector('#geocoder input').placeholder = 'Ex. '; }, 5000);
+    setTimeout(()=>{ document.querySelector('#geocoder input').placeholder = 'Ex. 4'; }, 5500);
+    setTimeout(()=>{ document.querySelector('#geocoder input').placeholder = 'Ex. 40'; }, 6000);
+    setTimeout(()=>{ document.querySelector('#geocoder input').placeholder = 'Ex. 400'; }, 6500);
+    setTimeout(()=>{ document.querySelector('#geocoder input').placeholder = 'Ex. 4000'; }, 7000);
+    setTimeout(()=>{ document.querySelector('#geocoder input').placeholder = 'Ex. 4000 v'; }, 7500);
+    setTimeout(()=>{ document.querySelector('#geocoder input').placeholder = 'Ex. 4000 ve'; }, 8000);
+    setTimeout(()=>{ document.querySelector('#geocoder input').placeholder = 'Ex. 4000 ver'; }, 8500);
+    setTimeout(()=>{ document.querySelector('#geocoder input').placeholder = 'Ex. 4000 vern'; }, 9000);
+    setTimeout(()=>{ document.querySelector('#geocoder input').placeholder = 'Ex. 4000 verno'; }, 9500);
+    setTimeout(()=>{ document.querySelector('#geocoder input').placeholder = 'Ex. 4000 vernor'; }, 10000);
+  }
+
   componentDidMount() {
     mapboxgl.accessToken =
       "pk.eyJ1IjoiY2l0eW9mZGV0cm9pdCIsImEiOiJjajd3MGlodXIwZ3piMnhudmlzazVnNm44In0.BL29_7QRvcnOrVuXX_hD9A";
@@ -30,7 +46,7 @@ class Map extends Component {
     this.geocoder = new MapboxGeocoder({
       accessToken: mapboxgl.accessToken,
       bbox: detroitBBox,
-      placeholder: "Find your election information by typing your address"
+      placeholder: "Find your election info"
     });
 
     this.geocoder.on('result', (e) => {
@@ -39,6 +55,12 @@ class Map extends Component {
 
     let map = this.map;
     document.getElementById('geocoder').appendChild(this.geocoder.onAdd(this.map));
+
+    try{
+      this.geocoderAnimation();
+    }catch(e){
+      console.log('Error:' + {e});
+    }
 
     this.map.on("load", () => {
       this.map.addSource('single-point', {
