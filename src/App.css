@@ -1,10 +1,12 @@
 .App {
   width: 100vw;
   height: 100vh;
+  background: #fec640;
   overflow-x: hidden;
   overflow-y: auto;
   display: grid;
-  grid-template-columns: 50%;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 3em 2.5em 40vh 2fr 2fr 2fr 2fr;
   grid-template-areas: "header header" "search search" "map map" "sign-up poll" "state-senate congress" "wccc council" "wcc police"; }
 
 .header {
@@ -26,8 +28,7 @@
   grid-area: search; }
 
 .Map {
-  grid-area: map;
-  height: 40vh; }
+  grid-area: map; }
 
 .poll {
   grid-area: poll; }
@@ -51,10 +52,8 @@
   grid-area: congress; }
 
 .item {
-  min-height: 10em;
   font-size: .85em;
-  padding: .75em;
-  background: #feb70d; }
+  padding: .75em; }
   .item div {
     margin: auto; }
   .item input {
@@ -65,7 +64,8 @@
     padding: 1em 2em;
     border: none;
     background: #004445;
-    color: #fff; }
+    color: #fff;
+    cursor: pointer; }
 
 .sign-up .box {
   position: relative; }
@@ -73,7 +73,7 @@
     display: none;
     position: absolute;
     top: 0;
-    padding: 1em 1.25em 1em .5em; }
+    padding: 1.5em; }
   .sign-up .box .phone-valid-alert.active {
     display: block;
     background: #9fd5b3; }
@@ -82,6 +82,7 @@
     background: #fd9a93; }
   .sign-up .box .close-phone-validation-alert {
     position: absolute;
+    cursor: pointer;
     top: -.25em;
     right: -.25em;
     background: #fff;
@@ -90,26 +91,24 @@
     font-weight: bold;
     padding: .05em .4em; }
 
+.important-dates {
+  display: none; }
+
+.important-dates.active {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  display: flex; }
+  .important-dates.active div {
+    background: #fff;
+    text-align: center;
+    padding: 1em;
+    margin: auto; }
+
 .item.active {
   border: 0.2em solid rgba(255, 255, 255, 0.5); }
 
-@media all and (min-width: 750px) {
-  .Map {
-    height: 45vh; }
-  .item {
-    min-height: 7em; } }
-
 @media all and (min-width: 950px) {
-  .header {
-    height: 5em; }
-    .header img {
-      width: 5em; }
-    .header span {
-      font-size: 2em; }
-  .Map {
-    height: 47vh; }
-  .item {
-    min-height: 7em; }
   .App {
     grid-template-columns: 33.33334%;
     grid-template-areas: "header header header" "search search search" "map map map" "sign-up sign-up poll" "congress state-senate council" "wccc wcc police"; }

@@ -3,6 +3,8 @@ import mapboxgl from "mapbox-gl";
 import * as turf from '@turf/turf'
 import 'mapbox-gl/dist/mapbox-gl.css';
 import './Map.css';
+import home from '../../img/home.png';
+import poll from '../../img/elections.png';
 const MapboxGeocoder = require('@mapbox/mapbox-gl-geocoder');
 const detroitBBox = [-83.3437,42.2102,-82.8754,42.5197];
 
@@ -35,6 +37,7 @@ class Map extends Component {
       this.getUserResults(e, this.map, this)
     });
 
+    let map = this.map;
     document.getElementById('geocoder').appendChild(this.geocoder.onAdd(this.map));
 
     this.map.on("load", () => {
@@ -46,14 +49,20 @@ class Map extends Component {
         }
       });
 
-      this.map.addLayer({
-          "id": "point",
-          "source": "single-point",
-          "type": "circle",
-          "paint": {
-              "circle-radius": 10,
-              "circle-color": "#007cbf"
-          }
+      console.log(home);
+
+      this.map.loadImage(home, function(error, image) {
+        if (error) throw error;
+        map.addImage('cat', image);
+        map.addLayer({
+            "id": "point",
+            "type": "symbol",
+            "source": "single-point",
+            "layout": {
+                "icon-image": "cat",
+                "icon-size": 0.75
+            }
+        });
       });
 
       this.map.addSource('poll-place', {
@@ -64,14 +73,19 @@ class Map extends Component {
         }
       });
 
-      this.map.addLayer({
-          "id": "poll-place",
-          "source": "poll-place",
-          "type": "circle",
-          "paint": {
-              "circle-radius": 10,
-              "circle-color": "#f44e42"
-          }
+
+      this.map.loadImage(poll, function(error, image) {
+        if (error) throw error;
+        map.addImage('poll', image);
+        map.addLayer({
+            "id": "poll-place",
+            "type": "symbol",
+            "source": "poll-place",
+            "layout": {
+                "icon-image": "poll",
+                "icon-size": 0.75
+            }
+        });
       });
     });
   }
@@ -108,7 +122,7 @@ class Map extends Component {
           'longitude' : this.lng
         };
         console.log(data);
-        const url = 'https://apis.detroitmi.gov/waste_notifier/subscribe/';
+        const url = 'https://apis.detroitmi.gov/elections/subscribe/';
         // Create our request constructor with all the parameters we need
         let request = new Request(url, {
             method: 'POST',
@@ -153,6 +167,7 @@ class Map extends Component {
     .then((resp) => resp.json()) // Transform the data into json
     .then(function(data) {
       console.log(data);
+      document.querySelector('.important-dates').className = 'important-dates';
       let pollingPlaceId = null;
       for (let i = 0; i < data.features.length; i++) {
         if(data.features[i].properties.boundary_t === 'Election Precincts'){
