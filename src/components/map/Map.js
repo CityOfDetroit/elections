@@ -30,7 +30,7 @@ class Map extends Component {
     this.geocoder = new MapboxGeocoder({
       accessToken: mapboxgl.accessToken,
       bbox: detroitBBox,
-      placeholder: "Type Address"
+      placeholder: "Find your election information by typing your address"
     });
 
     this.geocoder.on('result', (e) => {
