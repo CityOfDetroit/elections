@@ -7,7 +7,7 @@
   display: grid;
   grid-template-columns: 1fr 1fr;
   grid-template-rows: 3em 2.5em 40vh 2fr 2fr 2fr 2fr;
-  grid-template-areas: "header header" "search search" "map map" "sign-up poll" "state-senate congress" "wccc council" "wcc police"; }
+  grid-template-areas: "header header" "search search" "map map" "sign-up poll" "state-senate congress" "wccc council" "wcc police"; }
 
 .header {
   height: 3em;
@@ -112,7 +112,7 @@
 @media all and (min-width: 950px) {
   .App {
     grid-template-columns: 33.33334%;
-    grid-template-areas: "header header header" "search search search" "map map map" "sign-up sign-up poll" "congress state-senate council" "wccc wcc police"; }
+    grid-template-areas: "header header header" "search search search" "map map map" "sign-up sign-up poll" "congress state-senate council" "wccc wcc police"; }
   .sign-up {
     display: flex; }
     .sign-up .box {

@@ -184,7 +184,7 @@ class Map extends Component {
       item.className = `${item.className.split(' ')[0]} ${item.className.split(' ')[1]}`;
     });
     map.getSource('single-point').setData(ev.result.geometry);
-    let url = `https://services2.arcgis.com/qvkbeam7Wirps6zC/arcgis/rest/services/Election_Boundaries_2018/FeatureServer/0//query?where=&objectIds=&time=&geometry=${ev.result.center[0]}%2C${ev.result.center[1]}+&geometryType=esriGeometryPoint&inSR=4326&spatialRel=esriSpatialRelWithin&resultType=none&distance=0.0&units=esriSRUnit_Meter&returnGeodetic=false&outFields=*&returnGeometry=true&returnCentroid=false&multipatchOption=xyFootprint&maxAllowableOffset=&geometryPrecision=&outSR=4326&datumTransformation=&applyVCSProjection=false&returnIdsOnly=false&returnUniqueIdsOnly=false&returnCountOnly=false&returnExtentOnly=false&returnDistinctValues=false&orderByFields=&groupByFieldsForStatistics=&outStatistics=&having=&resultOffset=&resultRecordCount=&returnZ=false&returnM=false&returnExceededLimitFeatures=true&quantizationParameters=&sqlFormat=none&f=geojson&token=`;
+    let url = `https://services2.arcgis.com/qvkbeam7Wirps6zC/arcgis/rest/services/Elections_2019/FeatureServer/0/query?where=&objectIds=&time=&geometry=${ev.result.center[0]}%2C${ev.result.center[1]}+&geometryType=esriGeometryPoint&inSR=4326&spatialRel=esriSpatialRelWithin&resultType=none&distance=0.0&units=esriSRUnit_Meter&returnGeodetic=false&outFields=*&returnGeometry=true&returnCentroid=false&multipatchOption=xyFootprint&maxAllowableOffset=&geometryPrecision=&outSR=4326&datumTransformation=&applyVCSProjection=false&returnIdsOnly=false&returnUniqueIdsOnly=false&returnCountOnly=false&returnExtentOnly=false&returnDistinctValues=false&orderByFields=&groupByFieldsForStatistics=&outStatistics=&having=&resultOffset=&resultRecordCount=&returnZ=false&returnM=false&returnExceededLimitFeatures=true&quantizationParameters=&sqlFormat=none&f=geojson&token=`;
     fetch(url)
     .then((resp) => resp.json()) // Transform the data into json
     .then(function(data) {
@@ -266,8 +266,8 @@ class Map extends Component {
             document.querySelector('.poll').innerHTML = `
             <div>
               <strong>VOTING POLL</strong><br>
-              ${data.features[i].properties.precinct_n}<br>
-              <em>${data.features[i].properties.precinct_l}</em>
+              ${data.features[i].properties.precinct_location}<br>
+              <em>${data.features[i].properties.precinct_name}</em>
             </div>
             `;
             document.querySelector('.poll').className = 'poll item active';
