@@ -6,6 +6,10 @@
   overflow-y: auto;
   display: grid;
   grid-template-columns: 1fr 1fr;
+  grid-template-rows: 3em 2.5em calc(100vh - 5.5em);
+  grid-template-areas: "header header" "search search" "map map"; }
+
+.App.active {
   grid-template-rows: 3em 2.5em 40vh 2fr 2fr 2fr 2fr;
   grid-template-areas: "header header" "search search" "map map" "sign-up poll" "state-senate congress" "wccc council" "wcc police"; }
 
@@ -52,16 +56,16 @@
 .congress {
   grid-area: congress; }
 
-.item {
+.item.active {
   font-size: .85em;
   padding: .75em; }
-  .item div {
+  .item.active div {
     margin: auto; }
-  .item input {
+  .item.active input {
     max-width: 100%;
     border: none;
     padding: .5em; }
-  .item button {
+  .item.active button {
     padding: 1em 2em;
     border: none;
     background: #feb70d;
