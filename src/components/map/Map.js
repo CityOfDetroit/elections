@@ -189,7 +189,8 @@ class Map extends Component {
     .then((resp) => resp.json()) // Transform the data into json
     .then(function(data) {
       console.log(data);
-      document.querySelector('.important-dates').className = 'important-dates';
+      // document.querySelector('.important-dates').className = 'important-dates';
+      document.querySelector('.App').className = 'App active';
       let pollingPlaceId = null;
       for (let i = 0; i < data.features.length; i++) {
         if(data.features[i].properties.boundary_t === 'Election Precincts'){
