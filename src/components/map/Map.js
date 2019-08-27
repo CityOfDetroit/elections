@@ -278,34 +278,35 @@ class Map extends Component {
             break;
         }
       }
-      document.querySelector('.sign-up').innerHTML = `
-      <div class="box">
-      <strong>GET TEXT REMINDERS</strong><br/>
-      <label for="phone">
-        Phone
-        <input id="phone" value="" placeholder="(313)333-3333" />
-      </label>
-      <div class="phone-valid-alert">Check your phone for a confirmation message. <span class="close-phone-validation-alert">&times;</span></div>
-      <div class="phone-invalid-alert"><span class="invalid-phone-error-message"></span> <span class="close-phone-validation-alert">&times;</span></div>      
-      <button>SIGN UP</button>
-      </div>
-      `;
-      document.querySelector('#phone').addEventListener('keyup', (ev)=>{
-        parent.phoneFormater(ev);
-      })
-      document.querySelector('.sign-up button').addEventListener('click', (ev)=>{
-        parent.checkIfPhoneValid();
-      });
-      document.querySelector('.sign-up button').addEventListener('click', (ev)=>{
-        parent.closePhoneValidationAlert(ev);
-      });
-      let phoneValidationAlert = document.querySelectorAll('.close-phone-validation-alert');
-      for (var i = 0; i < phoneValidationAlert.length; i++) {
-        phoneValidationAlert[i].addEventListener('click', function(b){
-          parent.closePhoneValidationAlert(b);
-        });
-      }
-      document.querySelector('.sign-up').className = 'sign-up item active';
+      //=========== commenting out sms sign-up ================
+      // document.querySelector('.sign-up').innerHTML = `
+      // <div class="box">
+      // <strong>GET TEXT REMINDERS</strong><br/>
+      // <label for="phone">
+      //   Phone
+      //   <input id="phone" value="" placeholder="(313)333-3333" />
+      // </label>
+      // <div class="phone-valid-alert">Check your phone for a confirmation message. <span class="close-phone-validation-alert">&times;</span></div>
+      // <div class="phone-invalid-alert"><span class="invalid-phone-error-message"></span> <span class="close-phone-validation-alert">&times;</span></div>      
+      // <button>SIGN UP</button>
+      // </div>
+      // `;
+      // document.querySelector('#phone').addEventListener('keyup', (ev)=>{
+      //   parent.phoneFormater(ev);
+      // })
+      // document.querySelector('.sign-up button').addEventListener('click', (ev)=>{
+      //   parent.checkIfPhoneValid();
+      // });
+      // document.querySelector('.sign-up button').addEventListener('click', (ev)=>{
+      //   parent.closePhoneValidationAlert(ev);
+      // });
+      // let phoneValidationAlert = document.querySelectorAll('.close-phone-validation-alert');
+      // for (var i = 0; i < phoneValidationAlert.length; i++) {
+      //   phoneValidationAlert[i].addEventListener('click', function(b){
+      //     parent.closePhoneValidationAlert(b);
+      //   });
+      // }
+      // document.querySelector('.sign-up').className = 'sign-up item active';
       let tempStr = data.features[pollingPlaceId].properties.pollxy.split(',');
       let point = [];
       tempStr.forEach(element => {
