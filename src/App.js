@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import './App.css';
 import Map from './components/map/Map.js';
 import logo from './logo.png';
+import Item from './components/item/Item.js';
+import Signup from './components/signup/signup.js';
 
 class App extends Component {
   constructor(){

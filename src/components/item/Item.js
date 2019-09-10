@@ -7,14 +7,14 @@ class Item extends Component {
   }
 
   render() {
-    console.log(this.props);
+    console.log("item"+this.props);
     let value = '';
     if(this.props === undefined){
         value = `Content`;
     }
     
     return (
-        <div>{value}</div>
+      <h4>SIGNUP FOR ALERTS</h4>
     );
   }
 }
