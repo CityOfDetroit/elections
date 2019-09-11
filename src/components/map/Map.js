@@ -33,22 +33,23 @@ class Map extends Component {
   }
 
   componentDidMount() {
+    // Mapbox js token
     mapboxgl.accessToken =
       "pk.eyJ1IjoiY2l0eW9mZGV0cm9pdCIsImEiOiJjajd3MGlodXIwZ3piMnhudmlzazVnNm44In0.BL29_7QRvcnOrVuXX_hD9A";
-
+ 
     this.map = new mapboxgl.Map({
       container: this.mapContainer,
       style: "mapbox://styles/mapbox/streets-v9",
       zoom: 13,
       center: [-83.1, 42.36]
     });
-
+    // Geocoder for address search
     this.geocoder = new MapboxGeocoder({
       accessToken: mapboxgl.accessToken,
       bbox: detroitBBox,
       placeholder: "Find your election info"
     });
-
+// 
     this.geocoder.on('result', (e) => {
       this.getUserResults(e, this.map, this)
     });
@@ -111,40 +112,41 @@ class Map extends Component {
       });
     });
   }
+  // Stripphonenumber not needed due to the post format
+  // stripPhoneNumber(number){
+  //   let newNumber = '';
+  //   console.log(number.split('('));
+  //   newNumber = number.split('(')[1];
+  //   console.log(newNumber);
+  //   console.log(newNumber.split(')'));
+  //   newNumber = newNumber.split(')')[0] + newNumber.split(')')[1];
+  //   console.log(newNumber);
+  //   console.log(newNumber.split('-'));
+  //   newNumber = newNumber.split('-')[0] + newNumber.split('-')[1];
+  //   console.log(newNumber);
+  //   return newNumber;
+  // }
 
-  stripPhoneNumber(number){
-    let newNumber = '';
-    console.log(number.split('('));
-    newNumber = number.split('(')[1];
-    console.log(newNumber);
-    console.log(newNumber.split(')'));
-    newNumber = newNumber.split(')')[0] + newNumber.split(')')[1];
-    console.log(newNumber);
-    console.log(newNumber.split('-'));
-    newNumber = newNumber.split('-')[0] + newNumber.split('-')[1];
-    console.log(newNumber);
-    return newNumber;
-  }
-
+  // Phone Validity check
   checkIfPhoneValid(){
     let phoneNumber = document.getElementById('phone').value;
     let a = /^(1\s|1|)?((\(\d{3}\))|\d{3})(\-|\s)?(\d{3})(\-|\s)?(\d{4})$/.test(phoneNumber);
     
-    console.log(document.querySelector('#geocoder input').value);
+    // console.log(document.querySelector('#geocoder input').value);
     if(a){
-      phoneNumber = this.stripPhoneNumber(phoneNumber);
+      // phoneNumber = this.stripPhoneNumber(phoneNumber);
       let routeIDs = '1';
       let servicesSignup = 'trash';
         let data = {
           'phone_number'  : phoneNumber,
-          'waste_area_ids': routeIDs,
-          'service_type'  : servicesSignup,
+          // 'waste_area_ids': routeIDs,
+          // 'service_type'  : servicesSignup,
           'address' : document.querySelector('#geocoder input').value,
-          'latitude' :  this.lat,
-          'longitude' : this.lng
+          // 'latitude' :  this.lat,
+          // 'longitude' : this.lng
         };
         console.log(data);
-        const url = 'https://apis.detroitmi.gov/elections/subscribe/';
+        const url = 'http://apis.detroitmi.gov/messenger/clients/1/subscribe/';
         // Create our request constructor with all the parameters we need
         let request = new Request(url, {
             method: 'POST',
@@ -278,35 +280,35 @@ class Map extends Component {
             break;
         }
       }
-      //=========== commenting out sms sign-up ================
-      // document.querySelector('.sign-up').innerHTML = `
-      // <div class="box">
-      // <strong>GET TEXT REMINDERS</strong><br/>
-      // <label for="phone">
-      //   Phone
-      //   <input id="phone" value="" placeholder="(313)333-3333" />
-      // </label>
-      // <div class="phone-valid-alert">Check your phone for a confirmation message. <span class="close-phone-validation-alert">&times;</span></div>
-      // <div class="phone-invalid-alert"><span class="invalid-phone-error-message"></span> <span class="close-phone-validation-alert">&times;</span></div>      
-      // <button>SIGN UP</button>
-      // </div>
-      // `;
-      // document.querySelector('#phone').addEventListener('keyup', (ev)=>{
-      //   parent.phoneFormater(ev);
-      // })
-      // document.querySelector('.sign-up button').addEventListener('click', (ev)=>{
-      //   parent.checkIfPhoneValid();
-      // });
-      // document.querySelector('.sign-up button').addEventListener('click', (ev)=>{
-      //   parent.closePhoneValidationAlert(ev);
-      // });
-      // let phoneValidationAlert = document.querySelectorAll('.close-phone-validation-alert');
-      // for (var i = 0; i < phoneValidationAlert.length; i++) {
-      //   phoneValidationAlert[i].addEventListener('click', function(b){
-      //     parent.closePhoneValidationAlert(b);
-      //   });
-      // }
-      // document.querySelector('.sign-up').className = 'sign-up item active';
+      //=========== sms sign-up ================
+      document.querySelector('.sign-up').innerHTML = `
+      <div class="box">
+      <strong>GET TEXT REMINDERS</strong><br/>
+      <label for="phone">
+        Phone
+        <input id="phone" value="" placeholder="(313)333-3333" />
+      </label>
+      <div class="phone-valid-alert">Check your phone for a confirmation message. <span class="close-phone-validation-alert">&times;</span></div>
+      <div class="phone-invalid-alert"><span class="invalid-phone-error-message"></span> <span class="close-phone-validation-alert">&times;</span></div>      
+      <button>SIGN UP</button>
+      </div>
+      `;
+      document.querySelector('#phone').addEventListener('keyup', (ev)=>{
+        parent.phoneFormater(ev);
+      })
+      document.querySelector('.sign-up button').addEventListener('click', (ev)=>{
+        parent.checkIfPhoneValid();
+      });
+      document.querySelector('.sign-up button').addEventListener('click', (ev)=>{
+        parent.closePhoneValidationAlert(ev);
+      });
+      let phoneValidationAlert = document.querySelectorAll('.close-phone-validation-alert');
+      for (var i = 0; i < phoneValidationAlert.length; i++) {
+        phoneValidationAlert[i].addEventListener('click', function(b){
+          parent.closePhoneValidationAlert(b);
+        });
+      }
+      document.querySelector('.sign-up').className = 'sign-up item active';
       let tempStr = data.features[pollingPlaceId].properties.pollxy.split(',');
       let point = [];
       tempStr.forEach(element => {
@@ -328,7 +330,7 @@ class Map extends Component {
   phoneFormater(obj){
     console.log(obj);
     var numbers = obj.target.value.replace(/\D/g, ''),
-    char = {0:'(',3:')',6:'-'};
+    char = {0:'',3:'',6:''};
     obj.target.value = '';
     for (var i = 0; i < numbers.length; i++) {
         obj.target.value += (char[i]||'') + numbers[i];
@@ -344,6 +346,7 @@ class Map extends Component {
       <div className="Map">
        <div ref={el => (this.mapContainer = el)}/>
       </div>
+      
     );
   }
 }

@@ -6,7 +6,6 @@ class Panel extends Component {
   render() {
     let display = null;
     if (this.props.results != null){
-      console.log("wtf"+this.props.results);
       display = 'not empty';
     }
     return (
