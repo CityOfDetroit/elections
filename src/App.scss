@@ -55,13 +55,13 @@
     grid-area: map;
 }
 
-.poll{
-    grid-area: poll;
-}
+// .poll{
+//     grid-area: poll;
+// }
 
-.sign-up{
-    grid-area: sign-up;
-}
+// .sign-up{
+//     grid-area: sign-up;
+// }
 
 .police{
     grid-area: police;
@@ -109,7 +109,6 @@
 .sign-up{
     .box{
         position: relative;
-
         .phone-valid-alert, .phone-invalid-alert{
             display: none;
             position: absolute;
@@ -180,11 +179,9 @@
     }
     .sign-up{
         display: flex;
-
         .box{
             margin: auto;
         }
-
         input{
             padding: 1em;
         }

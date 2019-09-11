@@ -35,12 +35,6 @@
 .Map {
   grid-area: map; }
 
-.poll {
-  grid-area: poll; }
-
-.sign-up {
-  grid-area: sign-up; }
-
 .police {
   grid-area: police; }
 

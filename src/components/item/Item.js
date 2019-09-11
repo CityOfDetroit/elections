@@ -12,10 +12,7 @@ class Item extends Component {
     if(this.props === undefined){
         value = `Content`;
     }
-    
-    return (
-      <h4>SIGNUP FOR ALERTS</h4>
-    );
+   return;
   }
 }
 
