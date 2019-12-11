@@ -133,18 +133,12 @@ class Map extends Component {
     console.log(document.querySelector('#geocoder input').value);
     if(a){
       phoneNumber = this.stripPhoneNumber(phoneNumber);
-      let routeIDs = '1';
-      let servicesSignup = 'trash';
         let data = {
           'phone_number'  : phoneNumber,
-          'waste_area_ids': routeIDs,
-          'service_type'  : servicesSignup,
           'address' : document.querySelector('#geocoder input').value,
-          'latitude' :  this.lat,
-          'longitude' : this.lng
         };
         console.log(data);
-        const url = 'https://apis.detroitmi.gov/elections/subscribe/';
+        const url = 'http://apis.detroitmi.gov/messenger/clients/1/subscribe/';
         // Create our request constructor with all the parameters we need
         let request = new Request(url, {
             method: 'POST',
@@ -161,8 +155,10 @@ class Map extends Component {
             // console.log(resp.status);
           if(resp.status === 201){
             console.log('item submitted');
+            document.querySelector('.sending-alert').className = 'sending-alert';
             document.querySelector('.phone-valid-alert').className = 'phone-valid-alert active';
           }else{
+            document.querySelector('.sending-alert').className = 'sending-alert';
             document.querySelector('.invalid-phone-error-message').innerHTML = 'Error sending: Please try again.';
             document.querySelector('.phone-invalid-alert').className = 'phone-invalid-alert active';
           }
@@ -279,34 +275,36 @@ class Map extends Component {
         }
       }
       //=========== commenting out sms sign-up ================
-      // document.querySelector('.sign-up').innerHTML = `
-      // <div class="box">
-      // <strong>GET TEXT REMINDERS</strong><br/>
-      // <label for="phone">
-      //   Phone
-      //   <input id="phone" value="" placeholder="(313)333-3333" />
-      // </label>
-      // <div class="phone-valid-alert">Check your phone for a confirmation message. <span class="close-phone-validation-alert">&times;</span></div>
-      // <div class="phone-invalid-alert"><span class="invalid-phone-error-message"></span> <span class="close-phone-validation-alert">&times;</span></div>      
-      // <button>SIGN UP</button>
-      // </div>
-      // `;
-      // document.querySelector('#phone').addEventListener('keyup', (ev)=>{
-      //   parent.phoneFormater(ev);
-      // })
-      // document.querySelector('.sign-up button').addEventListener('click', (ev)=>{
-      //   parent.checkIfPhoneValid();
-      // });
-      // document.querySelector('.sign-up button').addEventListener('click', (ev)=>{
-      //   parent.closePhoneValidationAlert(ev);
-      // });
-      // let phoneValidationAlert = document.querySelectorAll('.close-phone-validation-alert');
-      // for (var i = 0; i < phoneValidationAlert.length; i++) {
-      //   phoneValidationAlert[i].addEventListener('click', function(b){
-      //     parent.closePhoneValidationAlert(b);
-      //   });
-      // }
-      // document.querySelector('.sign-up').className = 'sign-up item active';
+      document.querySelector('.sign-up').innerHTML = `
+      <div class="box">
+      <strong>GET TEXT REMINDERS</strong><br/>
+      <label for="phone">
+        Phone
+        <input id="phone" value="" placeholder="(313)333-3333" />
+      </label>
+      <div class="sending-alert">Sending...</div>
+      <div class="phone-valid-alert">Check your phone for a confirmation message. <span class="close-phone-validation-alert">&times;</span></div>
+      <div class="phone-invalid-alert"><span class="invalid-phone-error-message"></span> <span class="close-phone-invalid-alert">&times;</span></div>      
+      <button>SIGN UP</button>
+      </div>
+      `;
+      document.querySelector('#phone').addEventListener('keyup', (ev)=>{
+        parent.phoneFormater(ev);
+      })
+      document.querySelector('.sign-up button').addEventListener('click', (ev)=>{
+        document.querySelector('.sending-alert').className = 'sending-alert active';
+        parent.checkIfPhoneValid();
+      });
+      document.querySelector('.sign-up button').addEventListener('click', (ev)=>{
+        parent.closePhoneValidationAlert(ev);
+      });
+      let phoneValidationAlert = document.querySelectorAll('.close-phone-validation-alert');
+      for (var i = 0; i < phoneValidationAlert.length; i++) {
+        phoneValidationAlert[i].addEventListener('click', function(b){
+          parent.closePhoneValidationAlert(b);
+        });
+      }
+      document.querySelector('.sign-up').className = 'sign-up item active';
       let tempStr = data.features[pollingPlaceId].properties.pollxy.split(',');
       let point = [];
       tempStr.forEach(element => {
