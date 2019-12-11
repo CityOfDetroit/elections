@@ -19,7 +19,7 @@
     "header header"
     "search search"
     "map map"
-    "poll poll"
+    "sign-up poll"
     "state-senate congress"
     "wccc council"
     "wcc police"
@@ -110,11 +110,18 @@
     .box{
         position: relative;
 
-        .phone-valid-alert, .phone-invalid-alert{
+        .phone-valid-alert, .phone-invalid-alert, .sending-alert{
             display: none;
             position: absolute;
             top: 0;
             padding: 1.5em;
+        }
+
+        .sending-alert.active{
+            width: 100%;
+            padding: 2em;
+            display: block;
+            background: #feb70d;
         }
 
         .phone-valid-alert.active{
@@ -174,7 +181,7 @@
         "header header header"
         "search search search"
         "map map map"
-        "poll poll poll"
+        "sign-up sign-up poll"
         "congress state-senate council"
         "wccc wcc police"
     }

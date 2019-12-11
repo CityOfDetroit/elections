@@ -21,7 +21,7 @@ class App extends Component {
         <div id="geocoder"></div>
         <Map state={this.state}></Map>
         <div className="poll item"></div>
-        {/* <div className="sign-up item"></div> */}
+        <div className="sign-up item"></div> 
         <div className="council item"></div>
         <div className="wccc item"></div>
         <div className="wcc item"></div>
