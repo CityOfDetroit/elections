@@ -62990,11 +62990,9 @@ exports.default = void 0;
 
 var _react = _interopRequireWildcard(require("react"));
 
-var _reactMapboxGl = _interopRequireDefault(require("react-mapbox-gl"));
+var _reactMapboxGl = _interopRequireWildcard(require("react-mapbox-gl"));
 
 require("./Map.scss");
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function () { return cache; }; return cache; }
 
@@ -63017,50 +63015,23 @@ function Map(props) {
     map: (0, _react.useState)(0)
   }, props.state || {});
 
-  const geocoderAnimation = () => {
-    console.log('start animation');
-    setTimeout(() => {
-      document.querySelector('#geocoder input').placeholder = 'Ex. ';
-    }, 5000);
-    setTimeout(() => {
-      document.querySelector('#geocoder input').placeholder = 'Ex. 4';
-    }, 5500);
-    setTimeout(() => {
-      document.querySelector('#geocoder input').placeholder = 'Ex. 40';
-    }, 6000);
-    setTimeout(() => {
-      document.querySelector('#geocoder input').placeholder = 'Ex. 400';
-    }, 6500);
-    setTimeout(() => {
-      document.querySelector('#geocoder input').placeholder = 'Ex. 4000';
-    }, 7000);
-    setTimeout(() => {
-      document.querySelector('#geocoder input').placeholder = 'Ex. 4000 v';
-    }, 7500);
-    setTimeout(() => {
-      document.querySelector('#geocoder input').placeholder = 'Ex. 4000 ve';
-    }, 8000);
-    setTimeout(() => {
-      document.querySelector('#geocoder input').placeholder = 'Ex. 4000 ver';
-    }, 8500);
-    setTimeout(() => {
-      document.querySelector('#geocoder input').placeholder = 'Ex. 4000 vern';
-    }, 9000);
-    setTimeout(() => {
-      document.querySelector('#geocoder input').placeholder = 'Ex. 4000 verno';
-    }, 9500);
-    setTimeout(() => {
-      document.querySelector('#geocoder input').placeholder = 'Ex. 4000 vernor';
-    }, 10000);
-  };
-
   return _react.default.createElement("article", {
     id: "Map"
   }, _react.default.createElement(MapGL, {
     style: "mapbox://styles/mapbox/streets-v9",
     zoom: [13],
     center: [-83.1, 42.36]
-  }));
+  }, _react.default.createElement(_reactMapboxGl.Marker, {
+    id: "home",
+    coordinates: [-83.1, 42.36]
+  }, _react.default.createElement("img", {
+    src: "https://via.placeholder.com/30"
+  })), _react.default.createElement(_reactMapboxGl.Marker, {
+    id: "poll",
+    coordinates: [-83.1, 42.37]
+  }, _react.default.createElement("img", {
+    src: "https://via.placeholder.com/30"
+  }))));
 }
 
 var _default = Map;
@@ -63130,6 +63101,43 @@ function Geocoder(props) {
   } = _objectSpread({
     naddressav: (0, _react.useState)(0)
   }, props.state || {});
+
+  const geocoderAnimation = () => {
+    console.log('start animation');
+    setTimeout(() => {
+      document.querySelector('#geocoder input').placeholder = 'Ex. ';
+    }, 5000);
+    setTimeout(() => {
+      document.querySelector('#geocoder input').placeholder = 'Ex. 4';
+    }, 5500);
+    setTimeout(() => {
+      document.querySelector('#geocoder input').placeholder = 'Ex. 40';
+    }, 6000);
+    setTimeout(() => {
+      document.querySelector('#geocoder input').placeholder = 'Ex. 400';
+    }, 6500);
+    setTimeout(() => {
+      document.querySelector('#geocoder input').placeholder = 'Ex. 4000';
+    }, 7000);
+    setTimeout(() => {
+      document.querySelector('#geocoder input').placeholder = 'Ex. 4000 v';
+    }, 7500);
+    setTimeout(() => {
+      document.querySelector('#geocoder input').placeholder = 'Ex. 4000 ve';
+    }, 8000);
+    setTimeout(() => {
+      document.querySelector('#geocoder input').placeholder = 'Ex. 4000 ver';
+    }, 8500);
+    setTimeout(() => {
+      document.querySelector('#geocoder input').placeholder = 'Ex. 4000 vern';
+    }, 9000);
+    setTimeout(() => {
+      document.querySelector('#geocoder input').placeholder = 'Ex. 4000 verno';
+    }, 9500);
+    setTimeout(() => {
+      document.querySelector('#geocoder input').placeholder = 'Ex. 4000 vernor';
+    }, 10000);
+  };
 
   const getAddressSuggestions = addr => {
     let tempAddr = addr.split(",");
@@ -63268,7 +63276,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "36189" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "41043" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
