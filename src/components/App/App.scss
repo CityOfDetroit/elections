@@ -1,0 +1,167 @@
+.App{
+    width: 100vw;
+    height: 100vh;
+    background: lighten($color: #9fd5b3, $amount: 10);
+    overflow-x: hidden;
+    overflow-y: auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 2.5em calc(100vh - 2.5em);
+    grid-template-areas: 
+    "search search"
+    "map map"
+}
+
+.App.active{
+    grid-template-rows: 2.5em 40vh calc(40vh - 2.5em);
+    grid-template-areas: 
+    "search search"
+    "map map"
+    "panel panel"
+}
+
+.Geocoder{
+    grid-area: search;
+}
+
+.Panel{
+    grid-area: panel;
+}
+
+.poll{
+    grid-area: poll;
+}
+
+.sign-up{
+    grid-area: sign-up;
+}
+
+.police{
+    grid-area: police;
+}
+
+.wccc{
+    grid-area: wccc;
+}
+
+.wcc{
+    grid-area: wcc;
+}
+
+.state-senate{
+    grid-area: state-senate
+}
+
+.congress{
+    grid-area: congress;
+}
+
+.item.active{
+    font-size: .85em;
+    padding: .75em;
+
+    div{
+        margin: auto;
+    }
+// feb70d
+    input{
+        max-width: 100%;
+        border: none;
+        padding: .5em;
+    }
+
+    button{
+        padding: 1em 2em;
+        border: none;
+        background: #feb70d;
+        font-weight: bold;
+        cursor: pointer;
+    }
+}
+
+.sign-up{
+    .box{
+        position: relative;
+
+        .phone-valid-alert, .phone-invalid-alert, .sending-alert{
+            display: none;
+            position: absolute;
+            top: 0;
+            padding: 1.5em;
+        }
+
+        .sending-alert.active{
+            width: 100%;
+            padding: 2em;
+            display: block;
+            background: #feb70d;
+        }
+
+        .phone-valid-alert.active{
+            display: block;
+            background: #9fd5b3;
+        }
+
+        .phone-invalid-alert.active{
+            display: block;
+            background: #fd9a93;
+        }
+
+        .close-phone-validation-alert{
+            position: absolute;
+            cursor: pointer;
+            top: -.25em;
+            right: -.25em;
+            background: #fff;
+            color: #f44e42;
+            font-size: 1.5em;
+            font-weight: bold;
+            padding: .05em .4em;
+        }
+    }
+}
+
+.important-dates{
+    display: none;
+}
+
+.important-dates.active{
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    display: flex;
+
+    div{
+        background: #fff;
+        text-align: center;
+        padding: 1em;
+        margin: auto;
+    }
+}
+
+.item.active{
+    border: .2em solid rgba(255,255,255,.5);
+}
+// -----------------------------------------------------------------------------
+// NOTE: Media queries
+// -----------------------------------------------------------------------------
+@media all and (min-width: 950px) {
+    .App{
+        grid-template-columns: 33.33334%;
+        grid-template-areas: 
+        "search search search"
+        "map map map"
+        "panel panel panel"
+    }
+    .sign-up{
+        display: flex;
+
+        .box{
+            margin: auto;
+        }
+
+        input{
+            padding: 1em;
+        }
+    }
+}
