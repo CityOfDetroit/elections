@@ -11,7 +11,7 @@ function App() {
   return (
     <div className="App">
       <Geocoder state={{ address: [address, setAddress] }}></Geocoder>
-      <Map state={{ map: [map, setMap] }}></Map>
+      <Map state={{ map: [map, setMap] }} location={address}></Map>
       <Panel></Panel>
       {/* <div className="poll item"></div>
       <div className="sign-up item"></div> 

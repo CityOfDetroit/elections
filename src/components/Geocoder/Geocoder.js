@@ -1,9 +1,10 @@
-import React, { useState }from 'react';
+import React, { useState, useEffect }from 'react';
 import './Geocoder.scss';
 
 function Geocoder(props) {
   // Declare a new state variable, which we'll call when changing panel render
   const [sugg, setSugg]     = useState();
+  const [type, setType]     = useState();
   const {
     address: [address, setAddress]
   } = {
@@ -12,18 +13,17 @@ function Geocoder(props) {
   };
 
   const geocoderAnimation = () => {
-    console.log('start animation');
-    setTimeout(()=>{ document.querySelector('#geocoder input').placeholder = 'Ex. '; }, 5000);
-    setTimeout(()=>{ document.querySelector('#geocoder input').placeholder = 'Ex. 4'; }, 5500);
-    setTimeout(()=>{ document.querySelector('#geocoder input').placeholder = 'Ex. 40'; }, 6000);
-    setTimeout(()=>{ document.querySelector('#geocoder input').placeholder = 'Ex. 400'; }, 6500);
-    setTimeout(()=>{ document.querySelector('#geocoder input').placeholder = 'Ex. 4000'; }, 7000);
-    setTimeout(()=>{ document.querySelector('#geocoder input').placeholder = 'Ex. 4000 v'; }, 7500);
-    setTimeout(()=>{ document.querySelector('#geocoder input').placeholder = 'Ex. 4000 ve'; }, 8000);
-    setTimeout(()=>{ document.querySelector('#geocoder input').placeholder = 'Ex. 4000 ver'; }, 8500);
-    setTimeout(()=>{ document.querySelector('#geocoder input').placeholder = 'Ex. 4000 vern'; }, 9000);
-    setTimeout(()=>{ document.querySelector('#geocoder input').placeholder = 'Ex. 4000 verno'; }, 9500);
-    setTimeout(()=>{ document.querySelector('#geocoder input').placeholder = 'Ex. 4000 vernor'; }, 10000);
+    setTimeout(()=>{ document.querySelector('#address').placeholder = 'Ex. '; }, 5000);
+    setTimeout(()=>{ document.querySelector('#address').placeholder = 'Ex. 4'; }, 5500);
+    setTimeout(()=>{ document.querySelector('#address').placeholder = 'Ex. 40'; }, 6000);
+    setTimeout(()=>{ document.querySelector('#address').placeholder = 'Ex. 400'; }, 6500);
+    setTimeout(()=>{ document.querySelector('#address').placeholder = 'Ex. 4000'; }, 7000);
+    setTimeout(()=>{ document.querySelector('#address').placeholder = 'Ex. 4000 v'; }, 7500);
+    setTimeout(()=>{ document.querySelector('#address').placeholder = 'Ex. 4000 ve'; }, 8000);
+    setTimeout(()=>{ document.querySelector('#address').placeholder = 'Ex. 4000 ver'; }, 8500);
+    setTimeout(()=>{ document.querySelector('#address').placeholder = 'Ex. 4000 vern'; }, 9000);
+    setTimeout(()=>{ document.querySelector('#address').placeholder = 'Ex. 4000 verno'; }, 9500);
+    setTimeout(()=>{ document.querySelector('#address').placeholder = 'Ex. 4000 vernor'; }, 10000);
   }
 
   const getAddressSuggestions = (addr) => {
@@ -42,7 +42,10 @@ function Geocoder(props) {
         fetch(url)
         .then((resp) => resp.json()) // Transform the data into json
         .then(function(data) {
-            setSugg(data.candidates);
+          setSugg(data.candidates);
+          if(type == 'geocode'){
+            setAddress(data.candidates[0].location);
+          }
         })
         .catch((error) => {
             error(error);
@@ -53,25 +56,43 @@ function Geocoder(props) {
   }
 
   const handleChange = (ev) => {
-      getAddressSuggestions(ev.target.value);
-      (ev.target.value == '') ? setAddress('1301 3rd Ave') : setAddress(ev.target.value);
+    getAddressSuggestions(ev.target.value);
   }
 
   const buildOptions = () => {
     const markup = sugg.map((item, key) =>
-        <option key={key} value={item.address}></option>
+      <option key={key} value={item.address} location={item.location}></option>
     );
     return markup;
   }
 
+  const startGeocode = (ev) => {
+    switch (ev.key) {
+      case 'Enter':
+          setType('geocode');
+          break;
+  
+      case 'Unidentified':
+          setType('geocode');
+          break;
+
+      default:
+          break;
+    }
+  }
+
+  useEffect(() => {
+    geocoderAnimation();
+  });
+
   return (
-      <article className="Geocoder">
-        <label htmlFor="address"></label>
-        <input list="address-list" id="address" name="address" placeholder="Ex. 1301 3rd Ave" aria-describedby="Address of subscriber." onChange={handleChange}></input>
-        <datalist id="address-list">
-            {(sugg) ? buildOptions() : ''}
-        </datalist>
-      </article>
+    <article className="Geocoder">
+      <label htmlFor="address"></label>
+      <input list="address-list" id="address" name="address" placeholder="Enter your address." onKeyDown={startGeocode} aria-describedby="Address of subscriber." onChange={handleChange}></input>
+      <datalist id="address-list">
+          {(sugg) ? buildOptions() : ''}
+      </datalist>
+    </article>
   );
 }
 
