@@ -1,16 +1,18 @@
-import React, { useState, useEffect }from 'react';
+import React, { useState, useEffect, useContext }from 'react';
 import mapboxgl from "mapbox-gl";
 import './Map.scss';
+import { MapContext } from "./MapContext";
+import * as turf from '@turf/turf';
 const poll = require('../../img/elections.png');
 
 function Map(props) {
-  const {
-    map: [map, setMap]
-  } = {
-    map: useState(0),
-    ...(props.state || {})
-  };
+  const { state, dispatch } = useContext(MapContext);
 
+  const {
+    map,
+    points
+  } = state;
+  
   useEffect(() => {
     const MapGL = new mapboxgl.Map({
       container: "Map",
@@ -22,53 +24,55 @@ function Map(props) {
     });
 
     MapGL.on("load", () => {
+      dispatch({ type: "createMap", value: MapGL });
+      MapGL.addSource('single-point', {
+        "type": "geojson",
+        "data": {
+            "type": "FeatureCollection",
+            "features": []
+        }
+      });
 
-    MapGL.addSource('single-point', {
-      "type": "geojson",
-      "data": {
-          "type": "FeatureCollection",
-          "features": []
-      }
-    });
+      MapGL.addLayer({
+        "id": "home",
+        "source": "single-point",
+        "type": "circle",
+        "paint": {
+            "circle-radius": 6,
+            "circle-color": "#194ed7"
+        }
+      });
 
-    MapGL.loadImage(poll, function(error, image) {
-      if (error) throw error;
-      map.addImage('cat', image);
-      map.addLayer({
-          "id": "point",
-          "type": "symbol",
-          "source": "single-point",
-          "layout": {
-              "icon-image": "cat",
-              "icon-size": 0.75
-          }
+      MapGL.addSource('poll-place', {
+        "type": "geojson",
+        "data": {
+            "type": "FeatureCollection",
+            "features": []
+        }
+      });
+
+
+      MapGL.addLayer({
+        "id": "poll",
+        "source": "poll-place",
+        "type": "circle",
+        "paint": {
+            "circle-radius": 6,
+            "circle-color": "#194ed7"
+        }
       });
     });
+  }, []);
 
-    MapGL.addSource('poll-place', {
-      "type": "geojson",
-      "data": {
-          "type": "FeatureCollection",
-          "features": []
-      }
-    });
-
-
-    MapGL.loadImage(poll, function(error, image) {
-      if (error) throw error;
-      map.addImage('poll', image);
-      map.addLayer({
-          "id": "poll-place",
-          "type": "symbol",
-          "source": "poll-place",
-          "layout": {
-              "icon-image": "poll",
-              "icon-size": 0.75
-          }
+  useEffect(() => {
+    if (points) {
+      map.getSource("single-point").setData(turf.point([points.x, points.y]));
+      map.flyTo({
+        center: [points.x, points.y],
+        zoom: 12
       });
-    });
-  });
-  });
+    }
+  }, [map,points]);
 
   return (
     <article id="Map">

@@ -6,10 +6,16 @@ function Geocoder(props) {
   const [sugg, setSugg]     = useState();
   const [type, setType]     = useState();
   const {
-    address: [address, setAddress]
+    address: [address, setAddress],
   } = {
-    naddressav: useState(0),
+    address: useState(0),
     ...(props.state || {})
+  };
+  const {
+    state: [state, dispatch],
+  } = {
+    state: useState(0),
+    ...(props.map || {})
   };
 
   const geocoderAnimation = () => {
@@ -45,10 +51,11 @@ function Geocoder(props) {
           setSugg(data.candidates);
           if(type == 'geocode'){
             setAddress(data.candidates[0].location);
+            dispatch({ type: "loadPonts", value: data.candidates[0].location });
           }
         })
         .catch((error) => {
-            error(error);
+          console.log(error);
         });
     }catch (error) {
         console.log(error);
@@ -77,6 +84,7 @@ function Geocoder(props) {
           break;
 
       default:
+          setType('suggestion');
           break;
     }
   }
