@@ -23,110 +23,6 @@
   grid-area: panel;
 }
 
-.poll {
-  grid-area: poll;
-}
-
-.sign-up {
-  grid-area: sign-up;
-}
-
-.police {
-  grid-area: police;
-}
-
-.wccc {
-  grid-area: wccc;
-}
-
-.wcc {
-  grid-area: wcc;
-}
-
-.state-senate {
-  grid-area: state-senate;
-}
-
-.congress {
-  grid-area: congress;
-}
-
-.item.active {
-  font-size: 0.85em;
-  padding: 0.75em;
-}
-.item.active div {
-  margin: auto;
-}
-.item.active input {
-  max-width: 100%;
-  border: none;
-  padding: 0.5em;
-}
-.item.active button {
-  padding: 1em 2em;
-  border: none;
-  background: #feb70d;
-  font-weight: bold;
-  cursor: pointer;
-}
-
-.sign-up .box {
-  position: relative;
-}
-.sign-up .box .phone-valid-alert, .sign-up .box .phone-invalid-alert, .sign-up .box .sending-alert {
-  display: none;
-  position: absolute;
-  top: 0;
-  padding: 1.5em;
-}
-.sign-up .box .sending-alert.active {
-  width: 100%;
-  padding: 2em;
-  display: block;
-  background: #feb70d;
-}
-.sign-up .box .phone-valid-alert.active {
-  display: block;
-  background: #9fd5b3;
-}
-.sign-up .box .phone-invalid-alert.active {
-  display: block;
-  background: #fd9a93;
-}
-.sign-up .box .close-phone-validation-alert {
-  position: absolute;
-  cursor: pointer;
-  top: -0.25em;
-  right: -0.25em;
-  background: #fff;
-  color: #f44e42;
-  font-size: 1.5em;
-  font-weight: bold;
-  padding: 0.05em 0.4em;
-}
-
-.important-dates {
-  display: none;
-}
-
-.important-dates.active {
-  position: absolute;
-  bottom: 0;
-  width: 100%;
-  display: flex;
-}
-.important-dates.active div {
-  background: #fff;
-  text-align: center;
-  padding: 1em;
-  margin: auto;
-}
-
-.item.active {
-  border: 0.2em solid rgba(255, 255, 255, 0.5);
-}
-
 @media all and (min-width: 950px) {
   .App {
     grid-template-columns: 33.33334%;
@@ -566,8 +462,112 @@
   animation: rotate 400ms linear infinite;
 }
 .Panel {
-  display: grid;
-  grid-template-areas: "header header header" "search search search" "map map item-a" "map map item-b" "item-c sign-up item-d" "item-e item-f item-g";
+  grid-template-rows: 25% 25% 25% 25%;
+  grid-template-areas: "sign-up poll" "state-senate congress" "council wccc" "wcc police";
+}
+
+.poll {
+  grid-area: poll;
+}
+
+.sign-up {
+  grid-area: sign-up;
+}
+
+.police {
+  grid-area: police;
+}
+
+.wccc {
+  grid-area: wccc;
+}
+
+.wcc {
+  grid-area: wcc;
+}
+
+.state-senate {
+  grid-area: state-senate;
+}
+
+.congress {
+  grid-area: congress;
+}
+
+.item.active {
+  font-size: 0.85em;
+  padding: 0.75em;
+}
+.item.active div {
+  margin: auto;
+}
+.item.active input {
+  max-width: 100%;
+  border: none;
+  padding: 0.5em;
+}
+.item.active button {
+  padding: 1em 2em;
+  border: none;
+  background: #feb70d;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.sign-up .box {
+  position: relative;
+}
+.sign-up .box .phone-valid-alert, .sign-up .box .phone-invalid-alert, .sign-up .box .sending-alert {
+  display: none;
+  position: absolute;
+  top: 0;
+  padding: 1.5em;
+}
+.sign-up .box .sending-alert.active {
+  width: 100%;
+  padding: 2em;
+  display: block;
+  background: #feb70d;
+}
+.sign-up .box .phone-valid-alert.active {
+  display: block;
+  background: #9fd5b3;
+}
+.sign-up .box .phone-invalid-alert.active {
+  display: block;
+  background: #fd9a93;
+}
+.sign-up .box .close-phone-validation-alert {
+  position: absolute;
+  cursor: pointer;
+  top: -0.25em;
+  right: -0.25em;
+  background: #fff;
+  color: #f44e42;
+  font-size: 1.5em;
+  font-weight: bold;
+  padding: 0.05em 0.4em;
+}
+
+.important-dates {
+  display: none;
+}
+
+.important-dates.active {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  display: flex;
+}
+.important-dates.active div {
+  background: #fff;
+  text-align: center;
+  padding: 1em;
+  margin: auto;
+}
+
+.item.active {
+  border: 0.2em solid rgba(255, 255, 255, 0.5);
 }
 
 /*# sourceMappingURL=/src.e31bb0bc.css.map */

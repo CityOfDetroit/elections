@@ -1,12 +1,19 @@
 import React, { useState, useEffect, useContext }from 'react';
-import mapboxgl from "mapbox-gl";
+import mapboxgl from 'mapbox-gl';
 import './Map.scss';
-import { MapContext } from "./MapContext";
+import Connector from '../Connector/Connector';
+import { MapContext } from './MapContext';
 import * as turf from '@turf/turf';
 const poll = require('../../img/elections.png');
 
 function Map(props) {
   const { state, dispatch } = useContext(MapContext);
+  const {
+    elections: [elections, setElections],
+  } = {
+    elections: useState(0),
+    ...(props.elections || {})
+  };
 
   const {
     map,
@@ -66,13 +73,37 @@ function Map(props) {
 
   useEffect(() => {
     if (points) {
-      map.getSource("single-point").setData(turf.point([points.x, points.y]));
-      map.flyTo({
-        center: [points.x, points.y],
-        zoom: 12
-      });
+      Connector.start('get', `https://services2.arcgis.com/qvkbeam7Wirps6zC/arcgis/rest/services/Elections_2019/FeatureServer/0/query?where=&objectIds=&time=&geometry=${points.x}%2C${points.y}+&geometryType=esriGeometryPoint&inSR=4326&spatialRel=esriSpatialRelWithin&resultType=none&distance=0.0&units=esriSRUnit_Meter&returnGeodetic=false&outFields=*&returnGeometry=true&returnCentroid=false&multipatchOption=xyFootprint&maxAllowableOffset=&geometryPrecision=&outSR=4326&datumTransformation=&applyVCSProjection=false&returnIdsOnly=false&returnUniqueIdsOnly=false&returnCountOnly=false&returnExtentOnly=false&returnDistinctValues=false&orderByFields=&groupByFieldsForStatistics=&outStatistics=&having=&resultOffset=&resultRecordCount=&returnZ=false&returnM=false&returnExceededLimitFeatures=true&quantizationParameters=&sqlFormat=none&f=geojson&token=`, null, loadPoints, failLoad);
     }
   }, [map,points]);
+
+  const loadPoints = (resp) => {
+    console.log(resp.status);
+    if(resp.status >= 200 && resp.status < 300){
+      console.log('success');
+      resp.json().then(data => {
+        setElections(data);
+        let tempStr = data.features[0].properties.pollxy.split(',');
+        let point = [];
+        tempStr.forEach(element => {
+          point.push(parseFloat(element));
+        });
+        map.getSource("single-point").setData(turf.point([points.x, points.y]));
+        map.getSource("poll-place").setData(turf.point(point));
+        map.flyTo({
+          center: [points.x, points.y],
+          zoom: 12
+        });
+      });
+    }else{
+      console.log('partial error');
+    }
+  } 
+
+  const failLoad = (error) => {
+    console.log(error);
+
+  }
 
   return (
     <article id="Map">

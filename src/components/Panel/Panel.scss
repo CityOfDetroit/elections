@@ -1,10 +1,123 @@
 .Panel{
-  display: grid;
+  grid-template-rows: 25% 25% 25% 25%;
   grid-template-areas: 
-  "header header header"
-  "search search search"
-  "map map item-a"
-  "map map item-b"
-  "item-c sign-up item-d"
-  "item-e item-f item-g"
+  "sign-up poll"
+  "state-senate congress"
+  "council wccc"
+  "wcc police"
+}
+
+.poll{
+  grid-area: poll;
+}
+
+.sign-up{
+  grid-area: sign-up;
+}
+
+.police{
+  grid-area: police;
+}
+
+.wccc{
+  grid-area: wccc;
+}
+
+.wcc{
+  grid-area: wcc;
+}
+
+.state-senate{
+  grid-area: state-senate
+}
+
+.congress{
+  grid-area: congress;
+}
+
+.item.active{
+  font-size: .85em;
+  padding: .75em;
+
+  div{
+      margin: auto;
+  }
+// feb70d
+  input{
+      max-width: 100%;
+      border: none;
+      padding: .5em;
+  }
+
+  button{
+      padding: 1em 2em;
+      border: none;
+      background: #feb70d;
+      font-weight: bold;
+      cursor: pointer;
+  }
+}
+
+.sign-up{
+  .box{
+      position: relative;
+
+      .phone-valid-alert, .phone-invalid-alert, .sending-alert{
+          display: none;
+          position: absolute;
+          top: 0;
+          padding: 1.5em;
+      }
+
+      .sending-alert.active{
+          width: 100%;
+          padding: 2em;
+          display: block;
+          background: #feb70d;
+      }
+
+      .phone-valid-alert.active{
+          display: block;
+          background: #9fd5b3;
+      }
+
+      .phone-invalid-alert.active{
+          display: block;
+          background: #fd9a93;
+      }
+
+      .close-phone-validation-alert{
+          position: absolute;
+          cursor: pointer;
+          top: -.25em;
+          right: -.25em;
+          background: #fff;
+          color: #f44e42;
+          font-size: 1.5em;
+          font-weight: bold;
+          padding: .05em .4em;
+      }
+  }
+}
+
+.important-dates{
+  display: none;
+}
+
+.important-dates.active{
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  display: flex;
+
+  div{
+      background: #fff;
+      text-align: center;
+      padding: 1em;
+      margin: auto;
+  }
+}
+
+.item.active{
+  border: .2em solid rgba(255,255,255,.5);
 }

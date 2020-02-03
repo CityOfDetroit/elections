@@ -57276,7 +57276,40 @@ var reloadCSS = require('_css_loader');
 
 module.hot.dispose(reloadCSS);
 module.hot.accept(reloadCSS);
-},{"../../../node_modules/mapbox-gl/dist/mapbox-gl.css":"../node_modules/mapbox-gl/dist/mapbox-gl.css","../../../node_modules/@mapbox/mapbox-gl-geocoder/dist/mapbox-gl-geocoder.css":"../node_modules/@mapbox/mapbox-gl-geocoder/dist/mapbox-gl-geocoder.css","_css_loader":"../node_modules/parcel-bundler/src/builtins/css-loader.js"}],"components/Map/MapContext.js":[function(require,module,exports) {
+},{"../../../node_modules/mapbox-gl/dist/mapbox-gl.css":"../node_modules/mapbox-gl/dist/mapbox-gl.css","../../../node_modules/@mapbox/mapbox-gl-geocoder/dist/mapbox-gl-geocoder.css":"../node_modules/@mapbox/mapbox-gl-geocoder/dist/mapbox-gl-geocoder.css","_css_loader":"../node_modules/parcel-bundler/src/builtins/css-loader.js"}],"components/Connector/Connector.js":[function(require,module,exports) {
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+class Connector {
+  static buildRequest(url, data) {
+    return new Request(url, {
+      method: 'POST',
+      body: JSON.stringify(data),
+      headers: new Headers({
+        'Content-type': 'application/json'
+      }),
+      mode: 'cors',
+      cache: 'default'
+    });
+  }
+
+  static start(type, url, data, success, fail) {
+    let request = type == 'post' ? Connector.buildRequest(url, data) : url;
+    fetch(request).then(res => {
+      success(res);
+    }).catch(error => {
+      fail(error);
+    });
+  }
+
+}
+
+exports.default = Connector;
+},{}],"components/Map/MapContext.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -57308,6 +57341,8 @@ var _mapboxGl = _interopRequireDefault(require("mapbox-gl"));
 
 require("./Map.scss");
 
+var _Connector = _interopRequireDefault(require("../Connector/Connector"));
+
 var _MapContext = require("./MapContext");
 
 var turf = _interopRequireWildcard(require("@turf/turf"));
@@ -57318,6 +57353,12 @@ function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return 
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
 
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 const poll = require('../../img/elections.png');
 
 function Map(props) {
@@ -57325,6 +57366,13 @@ function Map(props) {
     state,
     dispatch
   } = (0, _react.useContext)(_MapContext.MapContext);
+
+  const {
+    elections: [elections, setElections]
+  } = _objectSpread({
+    elections: (0, _react.useState)(0)
+  }, props.elections || {});
+
   const {
     map,
     points
@@ -57378,13 +57426,38 @@ function Map(props) {
   }, []);
   (0, _react.useEffect)(() => {
     if (points) {
-      map.getSource("single-point").setData(turf.point([points.x, points.y]));
-      map.flyTo({
-        center: [points.x, points.y],
-        zoom: 12
-      });
+      _Connector.default.start('get', "https://services2.arcgis.com/qvkbeam7Wirps6zC/arcgis/rest/services/Elections_2019/FeatureServer/0/query?where=&objectIds=&time=&geometry=".concat(points.x, "%2C").concat(points.y, "+&geometryType=esriGeometryPoint&inSR=4326&spatialRel=esriSpatialRelWithin&resultType=none&distance=0.0&units=esriSRUnit_Meter&returnGeodetic=false&outFields=*&returnGeometry=true&returnCentroid=false&multipatchOption=xyFootprint&maxAllowableOffset=&geometryPrecision=&outSR=4326&datumTransformation=&applyVCSProjection=false&returnIdsOnly=false&returnUniqueIdsOnly=false&returnCountOnly=false&returnExtentOnly=false&returnDistinctValues=false&orderByFields=&groupByFieldsForStatistics=&outStatistics=&having=&resultOffset=&resultRecordCount=&returnZ=false&returnM=false&returnExceededLimitFeatures=true&quantizationParameters=&sqlFormat=none&f=geojson&token="), null, loadPoints, failLoad);
     }
   }, [map, points]);
+
+  const loadPoints = resp => {
+    console.log(resp.status);
+
+    if (resp.status >= 200 && resp.status < 300) {
+      console.log('success');
+      resp.json().then(data => {
+        setElections(data);
+        let tempStr = data.features[0].properties.pollxy.split(',');
+        let point = [];
+        tempStr.forEach(element => {
+          point.push(parseFloat(element));
+        });
+        map.getSource("single-point").setData(turf.point([points.x, points.y]));
+        map.getSource("poll-place").setData(turf.point(point));
+        map.flyTo({
+          center: [points.x, points.y],
+          zoom: 12
+        });
+      });
+    } else {
+      console.log('partial error');
+    }
+  };
+
+  const failLoad = error => {
+    console.log(error);
+  };
+
   return _react.default.createElement("article", {
     id: "Map"
   });
@@ -57392,7 +57465,7 @@ function Map(props) {
 
 var _default = Map;
 exports.default = _default;
-},{"react":"../node_modules/react/index.js","mapbox-gl":"../node_modules/mapbox-gl/dist/mapbox-gl.js","./Map.scss":"components/Map/Map.scss","./MapContext":"components/Map/MapContext.js","@turf/turf":"../node_modules/@turf/turf/turf.min.js","../../img/elections.png":"img/elections.png"}],"components/Panel/Panel.scss":[function(require,module,exports) {
+},{"react":"../node_modules/react/index.js","mapbox-gl":"../node_modules/mapbox-gl/dist/mapbox-gl.js","./Map.scss":"components/Map/Map.scss","../Connector/Connector":"components/Connector/Connector.js","./MapContext":"components/Map/MapContext.js","@turf/turf":"../node_modules/@turf/turf/turf.min.js","../../img/elections.png":"img/elections.png"}],"components/Panel/Panel.scss":[function(require,module,exports) {
 var reloadCSS = require('_css_loader');
 
 module.hot.dispose(reloadCSS);
@@ -57413,10 +57486,76 @@ function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return 
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
 
-function Panel() {
+function Panel(props) {
+  const buildItem = item => {
+    console.log(item);
+    let markup;
+
+    switch (item.properties.boundary_t) {
+      case 'Wayne County Community College Commissioner':
+        markup = _react.default.createElement("article", {
+          key: item.id + 'wccc',
+          className: "wccc item"
+        }, _react.default.createElement("div", null, _react.default.createElement("strong", null, "WAYNE COUNTY COMMUNITY COLLEGE COMMISSIONER"), _react.default.createElement("br", null), item.properties.representa, _react.default.createElement("br", null), _react.default.createElement("em", null, item.properties.district_l)));
+        break;
+
+      case 'Congressional':
+        markup = _react.default.createElement("article", {
+          key: item.id + 'congress',
+          className: "congress item"
+        }, _react.default.createElement("div", null, _react.default.createElement("strong", null, "CONGRESSIONAL"), _react.default.createElement("br", null), item.properties.representa, _react.default.createElement("br", null), _react.default.createElement("em", null, item.properties.district_l)));
+        break;
+
+      case 'State Senate':
+        markup = _react.default.createElement("article", {
+          key: item.id + 'senate',
+          className: "state-senate item"
+        }, _react.default.createElement("div", null, _react.default.createElement("strong", null, "STATE SENATE"), _react.default.createElement("br", null), item.properties.representa, _react.default.createElement("br", null), _react.default.createElement("em", null, item.properties.district_l)));
+        break;
+
+      case 'City Council':
+        markup = _react.default.createElement("article", {
+          key: item.id + 'council',
+          className: "council item"
+        }, _react.default.createElement("div", null, _react.default.createElement("strong", null, "CITY COUNCIL"), _react.default.createElement("br", null), item.properties.representa, _react.default.createElement("br", null), _react.default.createElement("em", null, item.properties.district_l)));
+        break;
+
+      case 'Police Commissioner':
+        markup = _react.default.createElement("article", {
+          key: item.id + 'police',
+          className: "police item"
+        }, _react.default.createElement("div", null, _react.default.createElement("strong", null, "POLICE COMMISSIONER"), _react.default.createElement("br", null), item.properties.representa, _react.default.createElement("br", null), _react.default.createElement("em", null, item.properties.district_l)));
+        break;
+
+      case 'Wayne County Commissioner':
+        markup = _react.default.createElement("article", {
+          key: item.id + 'wcc',
+          className: "wcc item"
+        }, _react.default.createElement("div", null, _react.default.createElement("strong", null, "WAYNE COUNTY COMMISSIONER"), _react.default.createElement("br", null), item.properties.representa, _react.default.createElement("br", null), _react.default.createElement("em", null, item.properties.district_l)));
+        break;
+
+      case 'Election Precincts':
+        markup = _react.default.createElement("article", {
+          key: item.id + 'precinct',
+          className: "poll item"
+        }, _react.default.createElement("div", null, _react.default.createElement("strong", null, "VOTING POLL"), _react.default.createElement("br", null), item.properties.precinct_location, _react.default.createElement("br", null), _react.default.createElement("em", null, item.properties.precinct_name)));
+        break;
+
+      default:
+        break;
+    }
+
+    return markup;
+  };
+
+  const buildPanel = () => {
+    const markup = props.data.features.map(item => buildItem(item));
+    return markup;
+  };
+
   return _react.default.createElement("div", {
     className: "Panel"
-  }, "Panel here");
+  }, props.data != undefined ? buildPanel() : '');
 }
 
 var _default = Panel;
@@ -57651,9 +57790,15 @@ function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj;
 
 function App() {
   const [address, setAddress] = (0, _react.useState)();
+  const [elections, setElections] = (0, _react.useState)();
   const [state, dispatch] = (0, _react.useReducer)(_MapReducer.MapReducer, _MapReducer.initialState);
+
+  const getAppStatus = () => {
+    return elections != undefined ? 'App active' : 'App';
+  };
+
   return _react.default.createElement("div", {
-    className: "App"
+    className: getAppStatus()
   }, _react.default.createElement(_Geocoder.default, {
     state: {
       address: [address, setAddress]
@@ -57667,8 +57812,12 @@ function App() {
       dispatch
     }
   }, _react.default.createElement(_Map.default, {
-    location: address
-  })), _react.default.createElement(_Panel.default, null));
+    elections: {
+      elections: [elections, setElections]
+    }
+  })), _react.default.createElement(_Panel.default, {
+    data: elections
+  }));
 }
 
 var _default = App;
@@ -57713,7 +57862,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "58189" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "57825" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

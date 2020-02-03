@@ -7,24 +7,21 @@ import { MapContext } from "../Map/MapContext";
 import { MapReducer, initialState } from '../Map/MapReducer';
 
 function App() {
-  const [address, setAddress] = useState();
-  const [state, dispatch] = useReducer(MapReducer, initialState);
+  const [address, setAddress]     = useState();
+  const [elections, setElections] = useState();
+  const [state, dispatch]         = useReducer(MapReducer, initialState);
+
+  const getAppStatus = () => {
+    return (elections != undefined) ? 'App active' : 'App';
+  }
 
   return (
-    <div className="App">
+    <div className={getAppStatus()}>
       <Geocoder state={{ address: [address, setAddress]}} map={{ state: [state, dispatch]}}></Geocoder>
       <MapContext.Provider value={{ state, dispatch }}>
-        <Map location={address}></Map>
+        <Map elections={{ elections: [elections, setElections]}}></Map>
       </MapContext.Provider>
-      <Panel></Panel>
-      {/* <div className="poll item"></div>
-      <div className="sign-up item"></div> 
-      <div className="council item"></div>
-      <div className="wccc item"></div>
-      <div className="wcc item"></div>
-      <div className="police item"></div>
-      <div className="state-senate item"></div>
-      <div className="congress item"></div> */}
+      <Panel data={elections}></Panel>
     </div>
   );
 }
