@@ -1,0 +1,93 @@
+@import '../../colors.scss';
+
+.Panel{
+  height: 100%;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr 1fr 1fr;
+  grid-template-areas: 
+  "sign-up poll"
+  "congress state-senate"
+  "council wccc"
+  "wcc police";
+
+  .item{
+    border: .2em solid rgba(255,255,255,.5);
+    font-size: .85em;
+    padding: .75em;
+
+    div{
+      margin: auto;
+    }
+    input{
+        max-width: 100%;
+        border: none;
+        padding: .5em;
+    }
+
+    button, a{
+        padding: .5em 2em;
+        border: none;
+        background: $color-3;
+        font-weight: bold;
+        cursor: pointer;
+    }
+
+    label{
+      display: none;
+    }
+
+    a{
+      text-decoration: none;
+    };
+    
+    #notification{
+      padding: 1em;
+      cursor: pointer;
+    }
+
+    #notification.succ{
+        background-color: $color-1;
+        color: $color-2;
+    }
+
+    #notification.err{
+        background-color: $color-4;
+        color: $white;
+    }
+  }
+
+  .sign-up{
+    .box{
+        position: relative;
+    }
+  }
+}
+
+.poll{
+  grid-area: poll;
+}
+
+.sign-up{
+  grid-area: sign-up;
+}
+
+.police{
+  grid-area: police;
+}
+
+.wccc{
+  grid-area: wccc;
+}
+
+.wcc{
+  grid-area: wcc;
+}
+
+.state-senate{
+  grid-area: state-senate
+}
+
+.congress{
+  grid-area: congress;
+}

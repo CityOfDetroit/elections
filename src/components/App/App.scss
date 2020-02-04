@@ -1,0 +1,52 @@
+.App{
+    width: 100vw;
+    height: 100vh;
+    background: lighten($color: #9fd5b3, $amount: 10);
+    overflow-x: hidden;
+    overflow-y: auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 2.5em calc(100vh - 2.5em);
+    grid-template-areas: 
+    "search search"
+    "map map"
+}
+
+.App.active{
+    grid-template-rows: 2.5em 50vh calc(50vh - 2.5em);
+    grid-template-areas: 
+    "search search"
+    "map map"
+    "panel panel"
+}
+
+.Geocoder{
+    grid-area: search;
+}
+
+.Panel{
+    grid-area: panel;
+}
+// -----------------------------------------------------------------------------
+// NOTE: Media queries
+// -----------------------------------------------------------------------------
+@media all and (min-width: 950px) {
+    .App{
+        grid-template-columns: 33.33334%;
+        grid-template-areas: 
+        "search search search"
+        "map map map"
+        "panel panel panel"
+    }
+    .sign-up{
+        display: flex;
+
+        .box{
+            margin: auto;
+        }
+
+        input{
+            padding: 1em;
+        }
+    }
+}
