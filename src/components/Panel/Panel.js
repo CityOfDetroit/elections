@@ -100,7 +100,6 @@ function Panel(props) {
   }
 
   const handleChange = (ev) => {
-    console.log(ev);
     switch (ev.target.id) {
       case 'phone':
         phoneFormater(ev);
@@ -118,10 +117,16 @@ function Panel(props) {
           "address": props.address,
           "lang": 'en'
         };
-        Connector.start('post',`https://apis.detroitmi.gov/messenger/clients/1/subscribe/`, param, (e)=>{(e.status >= 200 && e.status < 300) ? successPost(e) : errorPost(e)}, (e)=>{errorPost(e)});
+        if(phone != undefined){
+          Connector.start('post',`https://apis.detroitmi.gov/messenger/clients/1/subscribe/`, param, (e)=>{(e.status >= 200 && e.status < 300) ? successPost(e) : errorPost(e)}, (e)=>{errorPost(e)});
+        }else{
+          setNotification({type: 'err', msg: 'Please provide a valid number.'});
+          setLoader('');
+        }
         break;
     
       default:
+  
         break;
     }
   }
@@ -142,6 +147,7 @@ function Panel(props) {
 
   const buildPanel = () => {
     const markup = props.data.features.map((item) =>  buildItem(item));
+    setLoader('');
     return markup;
   }
 

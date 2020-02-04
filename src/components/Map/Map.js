@@ -4,7 +4,6 @@ import './Map.scss';
 import Connector from '../Connector/Connector';
 import { MapContext } from './MapContext';
 import * as turf from '@turf/turf';
-const poll = require('../../img/elections.png');
 
 function Map(props) {
   const { state, dispatch } = useContext(MapContext);
@@ -32,7 +31,7 @@ function Map(props) {
 
     MapGL.on("load", () => {
       dispatch({ type: "createMap", value: MapGL });
-      MapGL.addSource('single-point', {
+      MapGL.addSource('home', {
         "type": "geojson",
         "data": {
             "type": "FeatureCollection",
@@ -40,15 +39,22 @@ function Map(props) {
         }
       });
 
-      MapGL.addLayer({
-        "id": "home",
-        "source": "single-point",
-        "type": "circle",
-        "paint": {
-            "circle-radius": 8,
-            "circle-color": "#194ed7"
+      MapGL.loadImage(
+        "https://raw.githubusercontent.com/encharm/Font-Awesome-SVG-PNG/master/black/png/22/home.png",
+        (error, image) => {
+          if (error) throw error;
+          MapGL.addImage("home", image);
+          MapGL.addLayer({
+            "id": "home",
+            "type": "symbol",
+            "source": "home",
+            "layout": {
+                "icon-image": "home",
+                "icon-size": 1
+            }
+          })
         }
-      });
+      );
 
       MapGL.addSource('poll-place', {
         "type": "geojson",
@@ -58,16 +64,22 @@ function Map(props) {
         }
       });
 
-
-      MapGL.addLayer({
-        "id": "poll",
-        "source": "poll-place",
-        "type": "circle",
-        "paint": {
-            "circle-radius": 8,
-            "circle-color": "#cb4d4f"
+      MapGL.loadImage(
+        "https://raw.githubusercontent.com/encharm/Font-Awesome-SVG-PNG/master/black/png/22/building.png",
+        (error, image) => {
+          if (error) throw error;
+          MapGL.addImage("poll", image);
+          MapGL.addLayer({
+            "id": "poll-place",
+            "type": "symbol",
+            "source": "poll-place",
+            "layout": {
+                "icon-image": "poll",
+                "icon-size": 0.75
+            }
+          })
         }
-      });
+      );
     });
   }, []);
 
@@ -83,13 +95,16 @@ function Map(props) {
     if(resp.status >= 200 && resp.status < 300){
       resp.json().then(data => {
         setElections(data);
-        let tempStr = data.features[0].properties.pollxy.split(',');
+        let tempStr;
+        data.features.forEach((item) => {
+          (item.properties.boundary_t == 'Election Precincts') ? tempStr = item.properties.pollxy.split(',') : 0;
+        });
         let point = [];
         tempStr.forEach(element => {
           point.push(parseFloat(element));
         });
         map.resize();
-        map.getSource("single-point").setData(turf.point([points.x, points.y]));
+        map.getSource("home").setData(turf.point([points.x, points.y]));
         map.getSource("poll-place").setData(turf.point(point));
         map.flyTo({
           center: [points.x, points.y],

@@ -13,7 +13,7 @@
 }
 
 .App.active{
-    grid-template-rows: 2.5em 40vh calc(40vh - 2.5em);
+    grid-template-rows: 2.5em 50vh calc(50vh - 2.5em);
     grid-template-areas: 
     "search search"
     "map map"

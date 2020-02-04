@@ -11,7 +11,7 @@
 }
 
 .App.active {
-  grid-template-rows: 2.5em 40vh calc(40vh - 2.5em);
+  grid-template-rows: 2.5em 50vh calc(50vh - 2.5em);
   grid-template-areas: "search search" "map map" "panel panel";
 }
 
@@ -482,11 +482,17 @@
   padding: 0.5em;
 }
 .Panel .item button, .Panel .item a {
-  padding: 1em 2em;
+  padding: 0.5em 2em;
   border: none;
   background: #feb70d;
   font-weight: bold;
   cursor: pointer;
+}
+.Panel .item label {
+  display: none;
+}
+.Panel .item a {
+  text-decoration: none;
 }
 .Panel .item #notification {
   padding: 1em;
@@ -770,6 +776,35 @@
   100% {
     transform: scale(1, 1);
   }
+}
+.msg {
+  display: none;
+}
+
+.msg.active {
+  display: block;
+  position: absolute;
+  bottom: 0;
+  left: calc((100% - 20em)/2);
+  z-index: 5;
+  width: 20em;
+  background-color: #fff;
+  padding: 1em;
+  text-align: center;
+  min-height: 30em;
+  max-height: 95%;
+}
+.msg.active button {
+  position: absolute;
+  right: 1em;
+  width: 2em;
+  height: 2em;
+  background: #cb4d4f;
+  border: none;
+  border-radius: 50%;
+  color: #fff;
+  font-weight: bold;
+  cursor: pointer;
 }
 
 /*# sourceMappingURL=/src.e31bb0bc.css.map */

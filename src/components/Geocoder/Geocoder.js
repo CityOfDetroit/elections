@@ -23,6 +23,12 @@ function Geocoder(props) {
     elections: useState(0),
     ...(props.elections || {})
   };
+  const {
+    loader: [loader, setLoader],
+  } = {
+    loader: useState(0),
+    ...(props.loader || {})
+  };
 
   const geocoderAnimation = () => {
     setTimeout(()=>{ document.querySelector('#address').placeholder = 'Ex. '; }, 5000);
@@ -56,6 +62,7 @@ function Geocoder(props) {
         .then(function(data) {
           setSugg(data.candidates);
           if(type == 'geocode'){
+            setLoader('active');
             setAddress(data.candidates[0].address);
             dispatch({ type: "loadPonts", value: data.candidates[0].location });
           }
