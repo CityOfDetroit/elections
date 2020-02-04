@@ -462,8 +462,46 @@
   animation: rotate 400ms linear infinite;
 }
 .Panel {
-  grid-template-rows: 25% 25% 25% 25%;
-  grid-template-areas: "sign-up poll" "state-senate congress" "council wccc" "wcc police";
+  height: 100%;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr 1fr 1fr;
+  grid-template-areas: "sign-up poll" "congress state-senate" "council wccc" "wcc police";
+}
+.Panel .item {
+  border: 0.2em solid rgba(255, 255, 255, 0.5);
+  font-size: 0.85em;
+  padding: 0.75em;
+}
+.Panel .item div {
+  margin: auto;
+}
+.Panel .item input {
+  max-width: 100%;
+  border: none;
+  padding: 0.5em;
+}
+.Panel .item button, .Panel .item a {
+  padding: 1em 2em;
+  border: none;
+  background: #feb70d;
+  font-weight: bold;
+  cursor: pointer;
+}
+.Panel .item #notification {
+  padding: 1em;
+  cursor: pointer;
+}
+.Panel .item #notification.succ {
+  background-color: #004445;
+  color: #9FD5B3;
+}
+.Panel .item #notification.err {
+  background-color: #cb4d4f;
+  color: #fff;
+}
+.Panel .sign-up .box {
+  position: relative;
 }
 
 .poll {
@@ -493,81 +531,245 @@
 .congress {
   grid-area: congress;
 }
-
-.item.active {
-  font-size: 0.85em;
-  padding: 0.75em;
-}
-.item.active div {
-  margin: auto;
-}
-.item.active input {
-  max-width: 100%;
-  border: none;
-  padding: 0.5em;
-}
-.item.active button {
-  padding: 1em 2em;
-  border: none;
-  background: #feb70d;
-  font-weight: bold;
-  cursor: pointer;
-}
-
-.sign-up .box {
+.Geocoder {
   position: relative;
 }
-.sign-up .box .phone-valid-alert, .sign-up .box .phone-invalid-alert, .sign-up .box .sending-alert {
-  display: none;
-  position: absolute;
-  top: 0;
-  padding: 1.5em;
-}
-.sign-up .box .sending-alert.active {
+.Geocoder input {
   width: 100%;
-  padding: 2em;
-  display: block;
-  background: #feb70d;
+  height: 100%;
+  padding: 0 3em 0 1em;
+  font-size: 1.1em;
 }
-.sign-up .box .phone-valid-alert.active {
-  display: block;
-  background: #9fd5b3;
-}
-.sign-up .box .phone-invalid-alert.active {
-  display: block;
-  background: #fd9a93;
-}
-.sign-up .box .close-phone-validation-alert {
+.Geocoder .clear {
   position: absolute;
-  cursor: pointer;
-  top: -0.25em;
-  right: -0.25em;
-  background: #fff;
-  color: #f44e42;
-  font-size: 1.5em;
-  font-weight: bold;
-  padding: 0.05em 0.4em;
-}
-
-.important-dates {
-  display: none;
-}
-
-.important-dates.active {
-  position: absolute;
-  bottom: 0;
-  width: 100%;
+  top: 0.25em;
+  right: 0;
+  width: 2em;
+  height: 2em;
+  color: #fff;
+  background-color: #cb4d4f;
   display: flex;
+  border-radius: 50%;
+  cursor: pointer;
 }
-.important-dates.active div {
-  background: #fff;
-  text-align: center;
-  padding: 1em;
+.Geocoder .clear span {
   margin: auto;
 }
+#loader-overlay {
+  display: none;
+}
+#loader-overlay article {
+  padding: 0;
+  transition: all 0.2s ease-in-out;
+}
 
-.item.active {
-  border: 0.2em solid rgba(255, 255, 255, 0.5);
+#loader-overlay.active {
+  position: absolute;
+  z-index: 5;
+  height: 100vh;
+  width: 100vw;
+  padding: 1em;
+  background-color: rgba(255, 255, 255, 0.7);
+  display: flex;
+}
+#loader-overlay.active article {
+  margin: auto;
+  position: relative;
+  max-width: 100%;
+  padding: 4em 2em;
+  transition: all 0.2s ease-in-out;
+}
+#loader-overlay.active article div {
+  padding: 0.5em;
+}
+#loader-overlay.active article div p {
+  font-size: 1.28em;
+}
+
+.loader {
+  position: relative;
+  width: 75px;
+  height: 100px;
+}
+.loader__bar {
+  position: absolute;
+  bottom: 0;
+  width: 10px;
+  height: 50%;
+  background: #cb4d4f;
+  transform-origin: center bottom;
+  box-shadow: 1px 1px 0 rgba(0, 0, 0, 0.2);
+}
+.loader__bar:nth-child(1) {
+  left: 0px;
+  transform: scale(1, 0.2);
+  animation: barUp1 4s infinite;
+}
+.loader__bar:nth-child(2) {
+  left: 20px;
+  transform: scale(1, 0.4);
+  animation: barUp2 4s infinite;
+}
+.loader__bar:nth-child(3) {
+  left: 40px;
+  transform: scale(1, 0.6);
+  animation: barUp3 4s infinite;
+}
+.loader__bar:nth-child(4) {
+  left: 60px;
+  transform: scale(1, 0.8);
+  animation: barUp4 4s infinite;
+}
+.loader__bar:nth-child(5) {
+  left: 80px;
+  transform: scale(1, 1);
+  animation: barUp5 4s infinite;
+}
+.loader__ball {
+  position: absolute;
+  bottom: 10px;
+  left: 0;
+  width: 10px;
+  height: 10px;
+  background: #cb4d4f;
+  border-radius: 50%;
+  animation: ball 4s infinite;
+}
+
+@keyframes ball {
+  0% {
+    transform: translate(0, 0);
+  }
+  5% {
+    transform: translate(10px, -14px);
+  }
+  10% {
+    transform: translate(20px, -10px);
+  }
+  17% {
+    transform: translate(30px, -24px);
+  }
+  20% {
+    transform: translate(40px, -20px);
+  }
+  27% {
+    transform: translate(50px, -34px);
+  }
+  30% {
+    transform: translate(60px, -30px);
+  }
+  37% {
+    transform: translate(70px, -44px);
+  }
+  40% {
+    transform: translate(80px, -40px);
+  }
+  50% {
+    transform: translate(80px, 0);
+  }
+  57% {
+    transform: translate(70px, -14px);
+  }
+  60% {
+    transform: translate(60px, -10px);
+  }
+  67% {
+    transform: translate(50px, -24px);
+  }
+  70% {
+    transform: translate(40px, -20px);
+  }
+  77% {
+    transform: translate(30px, -34px);
+  }
+  80% {
+    transform: translate(20px, -30px);
+  }
+  87% {
+    transform: translate(10px, -44px);
+  }
+  90% {
+    transform: translate(0, -40px);
+  }
+  100% {
+    transform: translate(0, 0);
+  }
+}
+@keyframes barUp1 {
+  0% {
+    transform: scale(1, 0.2);
+  }
+  40% {
+    transform: scale(1, 0.2);
+  }
+  50% {
+    transform: scale(1, 1);
+  }
+  90% {
+    transform: scale(1, 1);
+  }
+  100% {
+    transform: scale(1, 0.2);
+  }
+}
+@keyframes barUp2 {
+  0% {
+    transform: scale(1, 0.4);
+  }
+  40% {
+    transform: scale(1, 0.4);
+  }
+  50% {
+    transform: scale(1, 0.8);
+  }
+  90% {
+    transform: scale(1, 0.8);
+  }
+  100% {
+    transform: scale(1, 0.4);
+  }
+}
+@keyframes barUp3 {
+  0% {
+    transform: scale(1, 0.6);
+  }
+  100% {
+    transform: scale(1, 0.6);
+  }
+}
+@keyframes barUp4 {
+  0% {
+    transform: scale(1, 0.8);
+  }
+  40% {
+    transform: scale(1, 0.8);
+  }
+  50% {
+    transform: scale(1, 0.4);
+  }
+  90% {
+    transform: scale(1, 0.4);
+  }
+  100% {
+    transform: scale(1, 0.8);
+  }
+}
+@keyframes barUp5 {
+  0% {
+    transform: scale(1, 1);
+  }
+  40% {
+    transform: scale(1, 1);
+  }
+  50% {
+    transform: scale(1, 0.2);
+  }
+  90% {
+    transform: scale(1, 0.2);
+  }
+  100% {
+    transform: scale(1, 1);
+  }
 }
 
 /*# sourceMappingURL=/src.e31bb0bc.css.map */

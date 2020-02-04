@@ -17,6 +17,12 @@ function Geocoder(props) {
     state: useState(0),
     ...(props.map || {})
   };
+  const {
+    elections: [elections, setElections],
+  } = {
+    elections: useState(0),
+    ...(props.elections || {})
+  };
 
   const geocoderAnimation = () => {
     setTimeout(()=>{ document.querySelector('#address').placeholder = 'Ex. '; }, 5000);
@@ -50,7 +56,7 @@ function Geocoder(props) {
         .then(function(data) {
           setSugg(data.candidates);
           if(type == 'geocode'){
-            setAddress(data.candidates[0].location);
+            setAddress(data.candidates[0].address);
             dispatch({ type: "loadPonts", value: data.candidates[0].location });
           }
         })
@@ -89,9 +95,17 @@ function Geocoder(props) {
     }
   }
 
+  const handleClear = (ev) => {
+    setType(undefined);
+    setAddress(undefined);
+    setElections(undefined);
+    dispatch({ type: "loadPonts", value: null });
+    (ev.target.parentElement.tagName == 'ARTICLE') ? ev.target.parentElement.children[1].value = '' : ev.target.parentElement.parentElement.children[1].value = '';
+  }
+
   useEffect(() => {
     geocoderAnimation();
-  });
+  }, []);
 
   return (
     <article className="Geocoder">
@@ -100,6 +114,7 @@ function Geocoder(props) {
       <datalist id="address-list">
           {(sugg) ? buildOptions() : ''}
       </datalist>
+      {(type != undefined) ? <div className='clear' onClick={handleClear}><span>x</span></div> : ''}
     </article>
   );
 }

@@ -57402,7 +57402,7 @@ function Map(props) {
         "source": "single-point",
         "type": "circle",
         "paint": {
-          "circle-radius": 6,
+          "circle-radius": 8,
           "circle-color": "#194ed7"
         }
       });
@@ -57418,8 +57418,8 @@ function Map(props) {
         "source": "poll-place",
         "type": "circle",
         "paint": {
-          "circle-radius": 6,
-          "circle-color": "#194ed7"
+          "circle-radius": 8,
+          "circle-color": "#cb4d4f"
         }
       });
     });
@@ -57427,14 +57427,13 @@ function Map(props) {
   (0, _react.useEffect)(() => {
     if (points) {
       _Connector.default.start('get', "https://services2.arcgis.com/qvkbeam7Wirps6zC/arcgis/rest/services/Elections_2019/FeatureServer/0/query?where=&objectIds=&time=&geometry=".concat(points.x, "%2C").concat(points.y, "+&geometryType=esriGeometryPoint&inSR=4326&spatialRel=esriSpatialRelWithin&resultType=none&distance=0.0&units=esriSRUnit_Meter&returnGeodetic=false&outFields=*&returnGeometry=true&returnCentroid=false&multipatchOption=xyFootprint&maxAllowableOffset=&geometryPrecision=&outSR=4326&datumTransformation=&applyVCSProjection=false&returnIdsOnly=false&returnUniqueIdsOnly=false&returnCountOnly=false&returnExtentOnly=false&returnDistinctValues=false&orderByFields=&groupByFieldsForStatistics=&outStatistics=&having=&resultOffset=&resultRecordCount=&returnZ=false&returnM=false&returnExceededLimitFeatures=true&quantizationParameters=&sqlFormat=none&f=geojson&token="), null, loadPoints, failLoad);
+    } else {
+      map ? map.resize() : 0;
     }
   }, [map, points]);
 
   const loadPoints = resp => {
-    console.log(resp.status);
-
     if (resp.status >= 200 && resp.status < 300) {
-      console.log('success');
       resp.json().then(data => {
         setElections(data);
         let tempStr = data.features[0].properties.pollxy.split(',');
@@ -57442,6 +57441,7 @@ function Map(props) {
         tempStr.forEach(element => {
           point.push(parseFloat(element));
         });
+        map.resize();
         map.getSource("single-point").setData(turf.point([points.x, points.y]));
         map.getSource("poll-place").setData(turf.point(point));
         map.flyTo({
@@ -57482,13 +57482,31 @@ var _react = _interopRequireWildcard(require("react"));
 
 require("./Panel.scss");
 
+var _Connector = _interopRequireDefault(require("../Connector/Connector"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
 function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function () { return cache; }; return cache; }
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
 
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 function Panel(props) {
+  const [notification, setNotification] = (0, _react.useState)();
+  const [phone, setPhone] = (0, _react.useState)();
+
+  const {
+    loader: [loader, setLoader]
+  } = _objectSpread({
+    loader: (0, _react.useState)(0)
+  }, props.state || {});
+
   const buildItem = item => {
-    console.log(item);
     let markup;
 
     switch (item.properties.boundary_t) {
@@ -57535,10 +57553,14 @@ function Panel(props) {
         break;
 
       case 'Election Precincts':
+        let ballot = "https://detroitmi.gov/sites/detroitmi.localhost/files/election_info/precincts/".concat(item.properties.precinct, "/sample_ballot.pdf");
         markup = _react.default.createElement("article", {
           key: item.id + 'precinct',
           className: "poll item"
-        }, _react.default.createElement("div", null, _react.default.createElement("strong", null, "VOTING POLL"), _react.default.createElement("br", null), item.properties.precinct_location, _react.default.createElement("br", null), _react.default.createElement("em", null, item.properties.precinct_name)));
+        }, _react.default.createElement("div", null, _react.default.createElement("strong", null, "VOTING POLL"), _react.default.createElement("br", null), item.properties.precinct_location, _react.default.createElement("br", null), _react.default.createElement("em", null, item.properties.precinct_name), _react.default.createElement("br", null), _react.default.createElement("br", null), _react.default.createElement("a", {
+          href: ballot,
+          target: "_blank"
+        }, "Download sample ballot")));
         break;
 
       default:
@@ -57548,19 +57570,110 @@ function Panel(props) {
     return markup;
   };
 
+  const handleChange = ev => {
+    console.log(ev);
+
+    switch (ev.target.id) {
+      case 'phone':
+        phoneFormater(ev);
+        setPhone(ev.target.value);
+        break;
+
+      case 'notification':
+        setNotification(undefined);
+        break;
+
+      case 'sign-up-btn':
+        setLoader('active');
+        let param = {
+          "phone_number": phone,
+          "address": props.address,
+          "lang": 'en'
+        };
+
+        _Connector.default.start('post', "https://apis.detroitmi.gov/messenger/clients/1/subscribe/", param, e => {
+          e.status >= 200 && e.status < 300 ? successPost(e) : errorPost(e);
+        }, e => {
+          errorPost(e);
+        });
+
+        break;
+
+      default:
+        break;
+    }
+  };
+
+  const successPost = id => {
+    setLoader('');
+    setNotification({
+      type: 'succ',
+      msg: 'The number has been subscribed to the list.'
+    });
+  };
+
+  const errorPost = e => {
+    setLoader('');
+    console.log(e);
+  };
+
+  const buildNotification = () => {
+    return notification != undefined ? _react.default.createElement("p", {
+      id: "notification",
+      className: notification.type,
+      onClick: handleChange,
+      "aria-describedby": "Notification of request status. Please click to close."
+    }, notification.msg) : '';
+  };
+
   const buildPanel = () => {
     const markup = props.data.features.map(item => buildItem(item));
     return markup;
   };
 
+  const phoneFormater = obj => {
+    var numbers = obj.target.value.replace(/\D/g, ''),
+        char = {
+      0: '(',
+      3: ')',
+      6: '-'
+    };
+    obj.target.value = '';
+
+    for (var i = 0; i < numbers.length; i++) {
+      obj.target.value += (char[i] || '') + numbers[i];
+    }
+  };
+
   return _react.default.createElement("div", {
     className: "Panel"
-  }, props.data != undefined ? buildPanel() : '');
+  }, props.data != undefined ? buildPanel() : '', props.data != undefined ? _react.default.createElement("article", {
+    key: props.data.features[0].id + 'singup',
+    className: "sign-up item"
+  }, _react.default.createElement("div", {
+    className: "box"
+  }, _react.default.createElement("strong", null, "GET TEXT REMINDERS"), _react.default.createElement("br", null), _react.default.createElement("label", {
+    htmlFor: "phone",
+    className: "required-field"
+  }, "Phone"), _react.default.createElement("input", {
+    type: "tel",
+    id: "phone",
+    name: "phone",
+    pattern: "\\([0-9]{3}\\)[0-9]{3}-[0-9]{4}",
+    placeholder: "Ex. (313)333-3333",
+    "aria-describedby": "Number of subscriber.",
+    "aria-required": "true",
+    required: true,
+    onChange: handleChange
+  }), _react.default.createElement("button", {
+    id: "sign-up-btn",
+    onClick: handleChange
+  }, "SIGN UP"), buildNotification())) : '');
 }
 
 var _default = Panel;
 exports.default = _default;
-},{"react":"../node_modules/react/index.js","./Panel.scss":"components/Panel/Panel.scss"}],"components/Geocoder/Geocoder.scss":[function(require,module,exports) {
+},{"react":"../node_modules/react/index.js","./Panel.scss":"components/Panel/Panel.scss","../Connector/Connector":"components/Connector/Connector.js"}],"components/Geocoder/Geocoder.scss":[function(require,module,exports) {
 var reloadCSS = require('_css_loader');
 
 module.hot.dispose(reloadCSS);
@@ -57603,6 +57716,12 @@ function Geocoder(props) {
   } = _objectSpread({
     state: (0, _react.useState)(0)
   }, props.map || {});
+
+  const {
+    elections: [elections, setElections]
+  } = _objectSpread({
+    elections: (0, _react.useState)(0)
+  }, props.elections || {});
 
   const geocoderAnimation = () => {
     setTimeout(() => {
@@ -57658,7 +57777,7 @@ function Geocoder(props) {
         setSugg(data.candidates);
 
         if (type == 'geocode') {
-          setAddress(data.candidates[0].location);
+          setAddress(data.candidates[0].address);
           dispatch({
             type: "loadPonts",
             value: data.candidates[0].location
@@ -57701,9 +57820,20 @@ function Geocoder(props) {
     }
   };
 
+  const handleClear = ev => {
+    setType(undefined);
+    setAddress(undefined);
+    setElections(undefined);
+    dispatch({
+      type: "loadPonts",
+      value: null
+    });
+    ev.target.parentElement.tagName == 'ARTICLE' ? ev.target.parentElement.children[1].value = '' : ev.target.parentElement.parentElement.children[1].value = '';
+  };
+
   (0, _react.useEffect)(() => {
     geocoderAnimation();
-  });
+  }, []);
   return _react.default.createElement("article", {
     className: "Geocoder"
   }, _react.default.createElement("label", {
@@ -57718,12 +57848,57 @@ function Geocoder(props) {
     onChange: handleChange
   }), _react.default.createElement("datalist", {
     id: "address-list"
-  }, sugg ? buildOptions() : ''));
+  }, sugg ? buildOptions() : ''), type != undefined ? _react.default.createElement("div", {
+    className: "clear",
+    onClick: handleClear
+  }, _react.default.createElement("span", null, "x")) : '');
 }
 
 var _default = Geocoder;
 exports.default = _default;
-},{"react":"../node_modules/react/index.js","./Geocoder.scss":"components/Geocoder/Geocoder.scss"}],"components/Map/MapReducer.js":[function(require,module,exports) {
+},{"react":"../node_modules/react/index.js","./Geocoder.scss":"components/Geocoder/Geocoder.scss"}],"components/Loader/Loader.scss":[function(require,module,exports) {
+var reloadCSS = require('_css_loader');
+
+module.hot.dispose(reloadCSS);
+module.hot.accept(reloadCSS);
+},{"_css_loader":"../node_modules/parcel-bundler/src/builtins/css-loader.js"}],"components/Loader/Loader.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _react = _interopRequireDefault(require("react"));
+
+require("./Loader.scss");
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function Loader(props) {
+  return _react.default.createElement("section", {
+    id: "loader-overlay",
+    className: props.loader
+  }, _react.default.createElement("article", null, _react.default.createElement("div", null, _react.default.createElement("div", {
+    className: "loader"
+  }, _react.default.createElement("div", {
+    className: "loader__bar"
+  }), _react.default.createElement("div", {
+    className: "loader__bar"
+  }), _react.default.createElement("div", {
+    className: "loader__bar"
+  }), _react.default.createElement("div", {
+    className: "loader__bar"
+  }), _react.default.createElement("div", {
+    className: "loader__bar"
+  }), _react.default.createElement("div", {
+    className: "loader__ball"
+  })), _react.default.createElement("p", null, "LOADING"))));
+}
+
+var _default = Loader;
+exports.default = _default;
+},{"react":"../node_modules/react/index.js","./Loader.scss":"components/Loader/Loader.scss"}],"components/Map/MapReducer.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -57778,6 +57953,8 @@ var _Panel = _interopRequireDefault(require("../Panel/Panel"));
 
 var _Geocoder = _interopRequireDefault(require("../Geocoder/Geocoder"));
 
+var _Loader = _interopRequireDefault(require("../Loader/Loader"));
+
 var _MapContext = require("../Map/MapContext");
 
 var _MapReducer = require("../Map/MapReducer");
@@ -57792,6 +57969,7 @@ function App() {
   const [address, setAddress] = (0, _react.useState)();
   const [elections, setElections] = (0, _react.useState)();
   const [state, dispatch] = (0, _react.useReducer)(_MapReducer.MapReducer, _MapReducer.initialState);
+  const [loader, setLoader] = (0, _react.useState)('');
 
   const getAppStatus = () => {
     return elections != undefined ? 'App active' : 'App';
@@ -57799,12 +57977,17 @@ function App() {
 
   return _react.default.createElement("div", {
     className: getAppStatus()
-  }, _react.default.createElement(_Geocoder.default, {
+  }, _react.default.createElement(_Loader.default, {
+    loader: loader
+  }), _react.default.createElement(_Geocoder.default, {
     state: {
       address: [address, setAddress]
     },
     map: {
       state: [state, dispatch]
+    },
+    elections: {
+      elections: [elections, setElections]
     }
   }), _react.default.createElement(_MapContext.MapContext.Provider, {
     value: {
@@ -57816,13 +57999,17 @@ function App() {
       elections: [elections, setElections]
     }
   })), _react.default.createElement(_Panel.default, {
-    data: elections
+    address: address,
+    data: elections,
+    state: {
+      loader: [loader, setLoader]
+    }
   }));
 }
 
 var _default = App;
 exports.default = _default;
-},{"react":"../node_modules/react/index.js","./App.scss":"components/App/App.scss","../Map/Map":"components/Map/Map.js","../Panel/Panel":"components/Panel/Panel.js","../Geocoder/Geocoder":"components/Geocoder/Geocoder.js","../Map/MapContext":"components/Map/MapContext.js","../Map/MapReducer":"components/Map/MapReducer.js"}],"index.js":[function(require,module,exports) {
+},{"react":"../node_modules/react/index.js","./App.scss":"components/App/App.scss","../Map/Map":"components/Map/Map.js","../Panel/Panel":"components/Panel/Panel.js","../Geocoder/Geocoder":"components/Geocoder/Geocoder.js","../Loader/Loader":"components/Loader/Loader.js","../Map/MapContext":"components/Map/MapContext.js","../Map/MapReducer":"components/Map/MapReducer.js"}],"index.js":[function(require,module,exports) {
 "use strict";
 
 var _react = _interopRequireDefault(require("react"));
@@ -57862,7 +58049,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "57825" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "62413" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

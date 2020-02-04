@@ -1,10 +1,18 @@
 import React, { useState }from 'react';
 import './Panel.scss';
+import Connector from '../Connector/Connector';
 
 function Panel(props) {
+  const [notification, setNotification] = useState();
+  const [phone, setPhone]               = useState();
+  const {
+    loader: [loader, setLoader]
+  } = {
+    loader: useState(0),
+    ...(props.state || {})
+  };
 
   const buildItem = (item) => {
-    console.log(item);
     let markup;
     switch (item.properties.boundary_t) {
       case 'Wayne County Community College Commissioner':
@@ -73,11 +81,14 @@ function Panel(props) {
         break;
 
       case 'Election Precincts':
+        let ballot = `https://detroitmi.gov/sites/detroitmi.localhost/files/election_info/precincts/${item.properties.precinct}/sample_ballot.pdf`;
         markup = 
         <article key={item.id + 'precinct'} className="poll item">
-          <div><strong>VOTING POLL</strong><br/>
-          {item.properties.precinct_location}<br/>
-          <em>{item.properties.precinct_name}</em>
+          <div>
+            <strong>VOTING POLL</strong><br/>
+            {item.properties.precinct_location}<br/>
+            <em>{item.properties.precinct_name}</em><br/><br/>
+            <a href={ballot} target="_blank">Download sample ballot</a>
           </div>
         </article>;
         break;
@@ -88,14 +99,73 @@ function Panel(props) {
     return markup;
   }
 
+  const handleChange = (ev) => {
+    console.log(ev);
+    switch (ev.target.id) {
+      case 'phone':
+        phoneFormater(ev);
+        setPhone(ev.target.value);
+        break;
+
+      case 'notification':
+        setNotification(undefined);
+        break;
+
+      case 'sign-up-btn':
+        setLoader('active');
+        let param = {
+          "phone_number": phone,
+          "address": props.address,
+          "lang": 'en'
+        };
+        Connector.start('post',`https://apis.detroitmi.gov/messenger/clients/1/subscribe/`, param, (e)=>{(e.status >= 200 && e.status < 300) ? successPost(e) : errorPost(e)}, (e)=>{errorPost(e)});
+        break;
+    
+      default:
+        break;
+    }
+  }
+
+  const successPost = (id) => {
+    setLoader('');
+    setNotification({type: 'succ', msg: 'The number has been subscribed to the list.'});
+  }
+
+  const errorPost = (e) => {
+    setLoader('');
+    console.log(e);
+  }
+
+  const buildNotification = () => {
+    return (notification != undefined) ? <p id="notification" className={notification.type} onClick={handleChange} aria-describedby="Notification of request status. Please click to close.">{notification.msg}</p> : '';
+  }
+
   const buildPanel = () => {
     const markup = props.data.features.map((item) =>  buildItem(item));
     return markup;
   }
 
+  const phoneFormater = (obj) => {
+    var numbers = obj.target.value.replace(/\D/g, ''),
+    char = {0:'(',3:')',6:'-'};
+    obj.target.value = '';
+    for (var i = 0; i < numbers.length; i++) {
+        obj.target.value += (char[i]||'') + numbers[i];
+    }
+  }
+
   return (
     <div className="Panel">
       {(props.data != undefined) ? buildPanel() : ''}
+      {(props.data != undefined) ? <article key={props.data.features[0].id + 'singup'} className="sign-up item">
+      <div className="box">
+      <strong>GET TEXT REMINDERS</strong><br/>
+      <label htmlFor="phone" className="required-field">Phone</label>
+      <input type="tel" id="phone" name="phone" pattern="\([0-9]{3}\)[0-9]{3}-[0-9]{4}" placeholder="Ex. (313)333-3333" aria-describedby="Number of subscriber." aria-required="true" required onChange={handleChange}></input>   
+      <button id="sign-up-btn" onClick={handleChange}>SIGN UP</button>
+      {buildNotification()}  
+      </div>
+    </article> : ''}
     </div>
   );
 }
