@@ -1,4 +1,4 @@
-import React, { useState, useEffect }from 'react';
+import React, { useState }from 'react';
 import './Geocoder.scss';
 
 function Geocoder(props) {
@@ -30,21 +30,7 @@ function Geocoder(props) {
     ...(props.loader || {})
   };
 
-  const geocoderAnimation = () => {
-    setTimeout(()=>{ document.querySelector('#address').placeholder = 'Ex. '; }, 5000);
-    setTimeout(()=>{ document.querySelector('#address').placeholder = 'Ex. 4'; }, 5500);
-    setTimeout(()=>{ document.querySelector('#address').placeholder = 'Ex. 40'; }, 6000);
-    setTimeout(()=>{ document.querySelector('#address').placeholder = 'Ex. 400'; }, 6500);
-    setTimeout(()=>{ document.querySelector('#address').placeholder = 'Ex. 4000'; }, 7000);
-    setTimeout(()=>{ document.querySelector('#address').placeholder = 'Ex. 4000 v'; }, 7500);
-    setTimeout(()=>{ document.querySelector('#address').placeholder = 'Ex. 4000 ve'; }, 8000);
-    setTimeout(()=>{ document.querySelector('#address').placeholder = 'Ex. 4000 ver'; }, 8500);
-    setTimeout(()=>{ document.querySelector('#address').placeholder = 'Ex. 4000 vern'; }, 9000);
-    setTimeout(()=>{ document.querySelector('#address').placeholder = 'Ex. 4000 verno'; }, 9500);
-    setTimeout(()=>{ document.querySelector('#address').placeholder = 'Ex. 4000 vernor'; }, 10000);
-  }
-
-  const getAddressSuggestions = (addr) => {
+  const getAddressSuggestions = (addr, bypass) => {
     let tempAddr = addr.split(",");
     tempAddr = tempAddr[0];
     tempAddr = tempAddr.split(" ");
@@ -61,7 +47,7 @@ function Geocoder(props) {
         .then((resp) => resp.json()) // Transform the data into json
         .then(function(data) {
           setSugg(data.candidates);
-          if(type == 'geocode'){
+          if(type == 'geocode' || bypass){
             setLoader('active');
             setAddress(data.candidates[0].address);
             dispatch({ type: "loadPonts", value: data.candidates[0].location });
@@ -81,7 +67,7 @@ function Geocoder(props) {
 
   const buildOptions = () => {
     const markup = sugg.map((item, key) =>
-      <option key={key} value={item.address} location={item.location}></option>
+      <option key={key} value={item.address} location={item.location} onClick={()=>{alert('test')}}></option>
     );
     return markup;
   }
@@ -110,18 +96,24 @@ function Geocoder(props) {
     (ev.target.parentElement.tagName == 'ARTICLE') ? ev.target.parentElement.children[1].value = '' : ev.target.parentElement.parentElement.children[1].value = '';
   }
 
-  useEffect(() => {
-    geocoderAnimation();
-  }, []);
+  const handleGeocode = (ev) => {
+    setType('geocode');
+    if(ev.target.parentElement.tagName == 'DIV'){
+      getAddressSuggestions(ev.target.parentElement.parentElement.children[1].value, true);
+    }else{
+      getAddressSuggestions(ev.target.parentElement.children[1].value, true);
+    }
+  }
 
   return (
     <article className="Geocoder">
       <label htmlFor="address"></label>
-      <input list="address-list" id="address" name="address" placeholder="Enter your address." onKeyDown={startGeocode} aria-describedby="Address of subscriber." onChange={handleChange}></input>
+      <input list="address-list" id="address" name="address" placeholder="Enter your address. Ex. 1301 3rd" onClick={startGeocode} onKeyDown={startGeocode} aria-describedby="Address of subscriber." onChange={handleChange}></input>
       <datalist id="address-list">
           {(sugg) ? buildOptions() : ''}
       </datalist>
-      {(type != undefined) ? <div className='clear' onClick={handleClear}><span>x</span></div> : ''}
+      {(type != undefined && address == undefined) ? <div className='find-btn' onClick={handleGeocode}><span>Search <i className="fas fa-search-location"></i></span></div> : ''}
+      {(type != undefined && address != undefined) ? <div className='clear' onClick={handleClear}><span>x</span></div> : ''}
     </article>
   );
 }
