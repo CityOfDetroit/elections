@@ -13,13 +13,28 @@
     .clear{
         position: absolute;
         top: .25em;
-        right: 0;
+        right: 2em;
         width: 2em;
         height: 2em;
         color: $white;
         background-color: $color-4;
         display: flex;
         border-radius: 50%;
+        cursor: pointer;
+
+        span{
+            margin: auto;
+        }
+    }
+
+    .find-btn{
+        position: absolute;
+        top: .25em;
+        right: 2em;
+        padding: .5em;
+        color: $white;
+        background-color: $color-1;
+        display: flex;
         cursor: pointer;
 
         span{

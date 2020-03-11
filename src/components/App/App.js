@@ -3,7 +3,6 @@ import './App.scss';
 import Map from '../Map/Map';
 import Panel from '../Panel/Panel';
 import Geocoder from '../Geocoder/Geocoder';
-import Loader from '../Loader/Loader';
 import Message from '../Message/Message';
 import { MapContext } from "../Map/MapContext";
 import { MapReducer, initialState } from '../Map/MapReducer';
@@ -21,7 +20,21 @@ function App() {
 
   return (
     <div className={getAppStatus()}>
-      <Loader loader={loader}></Loader>
+      <section id="loader-overlay" className={loader}>
+          <article>
+          <div>
+              <div className="loader">
+              <div className="loader__bar"></div>
+              <div className="loader__bar"></div>
+              <div className="loader__bar"></div>
+              <div className="loader__bar"></div>
+              <div className="loader__bar"></div>
+              <div className="loader__ball"></div>
+              </div>
+              <p>LOADING</p>
+          </div>
+          </article>
+      </section>
       <Message state={{ msg: [msg, setMsg]}}></Message>
       <Geocoder state={{ address: [address, setAddress]}} loader={{ loader: [loader, setLoader]}} map={{ state: [state, dispatch]}} elections={{ elections: [elections, setElections]}}></Geocoder>
       <MapContext.Provider value={{ state, dispatch }}>
