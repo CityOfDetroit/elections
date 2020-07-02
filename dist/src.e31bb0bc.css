@@ -762,6 +762,9 @@
   padding: 0 3em 0 1em;
   font-size: 1.1em;
 }
+.Geocoder input::placeholder {
+  color: #004445;
+}
 .Geocoder .clear {
   position: absolute;
   top: 0.25em;
