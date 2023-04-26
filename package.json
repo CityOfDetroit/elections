@@ -32,7 +32,7 @@
   "author": "Edgar Montes",
   "license": "MIT",
   "dependencies": {
-    "@mapbox/mapbox-gl-geocoder": "^4.5.1",
+    "@mapbox/mapbox-gl-geocoder": "^4.7.4",
     "@turf/turf": "^5.1.6",
     "mapbox-gl": "^1.8.1",
     "react": "^16.13.0",
